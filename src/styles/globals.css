@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+}
+
+.fade-right-white {
+  box-shadow: inset -40px 0 20px -20px white;
+}
