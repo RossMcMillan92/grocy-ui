@@ -5,19 +5,21 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start -p 3820"
   },
   "dependencies": {
-    "@types/ramda": "^0.27.33",
+    "@types/lodash": "^4.14.168",
+    "@types/ramda": "^0.27.36",
+    "@types/react-modal": "^3.10.6",
     "@types/react-query": "^1.1.2",
-    "autoprefixer": "^10.1.0",
-    "dayjs": "^1.9.7",
+    "autoprefixer": "^10.2.3",
+    "dayjs": "^1.10.4",
     "dom-form-serializer": "^1.0.8",
-    "eslint": "^7.15.0",
+    "eslint": "^7.18.0",
     "focus-visible": "^5.2.0",
     "heroicons-react": "^1.3.0",
-    "next": "^10.0.3",
-    "postcss": "^8.2.1",
+    "next": "^10.0.5",
+    "postcss": "^8.2.4",
     "prettier": "^2.2.1",
     "ramda": "^0.27.1",
     "react": "17.0.1",
@@ -27,7 +29,7 @@
     "tailwindcss": "^2.0.2"
   },
   "devDependencies": {
-    "@types/node": "^14.14.13",
+    "@types/node": "^14.14.22",
     "@types/react": "^17.0.0",
     "typescript": "^4.1.3"
   }

@@ -1,6 +1,5 @@
 import { HeadingSizes, HeadingTypes } from "./Heading"
-import { isEmpty } from "ramda"
-import { Props as CheckboxesProps } from "./Checkboexes"
+import { Props as CheckboxesProps } from "./Checkboxes"
 import { Props as RadioProps } from "./Radios"
 import ErrorMessage, { Props as ErrorMessageProps } from "./ErrorMessage"
 import Fieldset, { Props as FieldsetProps } from "./Fieldset"
@@ -18,8 +17,8 @@ export type Props = {
   id: string
   name?: string
   renderInput?:
-    | ((props: RadioProps) => React.ReactNode)
-    | ((props: CheckboxesProps) => React.ReactNode)
+    | ((props: Partial<RadioProps>) => React.ReactNode)
+    | ((props: Partial<CheckboxesProps>) => React.ReactNode)
   title: string
 }
 

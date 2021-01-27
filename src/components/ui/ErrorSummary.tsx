@@ -4,10 +4,10 @@ import Paragraph from "./Paragraph"
 import React from "react"
 import classNames from "helpers/classNames"
 
-type FormErrors = Record<string, string | null>
+type FormErrors = Record<string, string | null | undefined>
 type ExtendedFormError = Record<string, unknown> & {
   field: string
-  message: string | null
+  message: string | null | undefined
 }
 type GenericError = React.ReactNode
 

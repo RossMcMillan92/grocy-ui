@@ -115,13 +115,13 @@ const CheckboxItem: FC<CheckboxProps & { id: string }> = ({
           <div
             className={classNames(
               "flex items-center justify-center",
-              "h-4 w-4 border-2 mr-2 rounded-full",
+              "h-4 w-4 border-2 mr-2 rounded-sm",
               isChecked ? "border-gray-500 bg-gray-200" : "border-gray-300",
             )}
           >
             <div
               className={classNames(
-                "h-2 w-2 rounded-full",
+                "h-2 w-2 rounded-sm",
                 "border-gray-500 bg-gray-500 transform",
                 "transition-transform duration-200 ease-in delay-75",
                 isChecked ? "scale-100" : "scale-0",

@@ -7,7 +7,9 @@ export type Props = Omit<FormFieldGroupProps, "renderInput"> & RadioProps
 const RadiosField: FC<Props> = (props) => (
   <FormFieldGroup
     {...props}
-    renderInput={(props: RadioProps) => <Radios {...props} />}
+    renderInput={(props: Partial<RadioProps>) => (
+      <Radios {...(props as RadioProps)} />
+    )}
   />
 )
 

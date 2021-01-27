@@ -24,6 +24,7 @@ import SummaryList from "components/ui/SummaryList"
 import Tag, { TagColors } from "components/ui/Tag"
 import TrackChoreModal from "components/TrackChoreModal"
 import AddChoreModal from "components/AddChoreModal"
+import { prop, sortBy } from "ramda"
 
 type WithError<T> = T | (Partial<T> & { errorStatus: number })
 type HomeProps = { chores?: Chore[]; dueSoonDays: number }
@@ -45,6 +46,10 @@ const ChoresRoute: React.FC<HomeProps> = ({
     },
     { initialData: initialChores },
   )
+  const sortedChores = chores
+    ? sortBy((chore) => chore.next_estimated_execution_time ?? "9999", chores)
+    : []
+  console.log("🚀 ~ file: chores.tsx ~ line 50 ~ sortedChores", sortedChores)
 
   return (
     <>
@@ -65,7 +70,7 @@ const ChoresRoute: React.FC<HomeProps> = ({
       </div>
 
       <ul className={classNames("divide-y divide-gray-300")}>
-        {chores?.map((chore) => (
+        {sortedChores.map((chore) => (
           <li key={chore.chore_id}>
             <ChoreDetails chore={chore} dueSoonDays={dueSoonDays} />
           </li>
@@ -74,7 +79,7 @@ const ChoresRoute: React.FC<HomeProps> = ({
 
       {status === "adding-chore" ? (
         <AddChoreModal
-          chores={chores ?? []}
+          chores={sortedChores}
           onClose={() => setStatus("pending")}
         />
       ) : null}
@@ -297,21 +302,22 @@ const ChoreTag: React.FC<{
       hoursUntilTomorrow + 24 * dueSoonDays,
       chore.next_estimated_execution_time,
     )
-  const isUntracked = !chore.last_tracked_time
+  const isUntracked =
+    !chore.last_tracked_time && !chore.next_estimated_execution_time
 
   if (!isUntracked && !isDueToday && !isDueTomorrow) return null
   return (
     <Tag
       className={classNames("transition duration-200 ease-in-out", className)}
       color={
-        isUntracked
-          ? TagColors.BLUE
-          : isDueToday
+        isDueToday
           ? TagColors.RED
-          : TagColors.YELLOW
+          : isDueTomorrow
+          ? TagColors.YELLOW
+          : TagColors.BLUE
       }
     >
-      {isUntracked ? "Untracked" : isDueToday ? "Due" : "Soon"}
+      {isDueToday ? "Due" : isDueTomorrow ? "Soon" : "Untracked"}
     </Tag>
   )
 }

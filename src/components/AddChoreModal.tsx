@@ -12,6 +12,15 @@ import TextareaField from "./ui/TextareaField"
 import CheckboxesField from "./ui/CheckboxesField"
 import { omit, prop, uniq } from "ramda"
 
+const DAYS_OF_WEEK = [
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
+]
 const AddChoreModal: React.FC<{
   chores: Chore[]
   onClose: () => void
@@ -21,9 +30,13 @@ const AddChoreModal: React.FC<{
   const [formStatus, setFormStatus] = React.useState<
     "pending" | "submitting" | "successful"
   >("pending")
+  const [selectedDays, setSelectedDays] = React.useState<String[]>([])
   const [selectedUsers, setSelectedUsers] = React.useState<String[]>(
     users.map(prop("id")),
   )
+  const [periodType, setPeriodType] = React.useState<
+    "dynamic-regular" | "weekly" | "monthly"
+  >("dynamic-regular")
   const cache = useQueryCache()
   const totalPages = 3
   const isLastPage = currentPage === totalPages
@@ -45,7 +58,7 @@ const AddChoreModal: React.FC<{
     <Modal title="Add chore" onRequestClose={onClose}>
       <DynamicForm
         action="/api/objects/chores"
-        editFormData={omit(["user"])}
+        editFormData={omit(["day", "user"])}
         method="POST"
         onSuccess={onSuccess}
         className="p-4 sm:p-6"
@@ -66,13 +79,29 @@ const AddChoreModal: React.FC<{
           }
 
           if (currentPage === 3) {
-            return {}
+            return {
+              period_days:
+                periodType === "dynamic-regular" &&
+                (Number.isNaN(Number(formData.period_days)) ||
+                  Number(formData.period_days) < 1)
+                  ? "Enter a number above 0"
+                  : periodType === "monthly" &&
+                    (Number.isNaN(Number(formData.period_days)) ||
+                      Number(formData.period_days) < 1 ||
+                      Number(formData.period_days) > 31)
+                  ? "Enter a number between 1 and 31"
+                  : null,
+              day:
+                periodType === "weekly" && selectedDays.length === 0
+                  ? "Select at least one day"
+                  : null,
+            }
           }
 
           return {}
         }}
       >
-        {({ isValid }) => (
+        {({ formErrors, isValid }) => (
           <>
             <div className="mb-8">
               <div
@@ -85,6 +114,7 @@ const AddChoreModal: React.FC<{
               >
                 <InputField
                   className="w-full"
+                  errorMessage={formErrors.name ?? ""}
                   id="name"
                   name="name"
                   label="Chore name"
@@ -137,7 +167,7 @@ const AddChoreModal: React.FC<{
                   <RadiosField
                     id="assignment_type"
                     name="assignment_type"
-                    title="In what order?"
+                    title="In which order?"
                     radios={[
                       {
                         defaultChecked: true,
@@ -172,26 +202,71 @@ const AddChoreModal: React.FC<{
                 <RadiosField
                   id="period_type"
                   name="period_type"
-                  title="How often will this chore be done?"
+                  title="When will this chore be done?"
                   radios={[
                     {
-                      defaultChecked: true,
+                      checked: periodType === "dynamic-regular",
                       label: 'Once every "X" days',
                       tabIndex: currentPage !== 3 ? -1 : undefined,
+                      onChange: () => setPeriodType("dynamic-regular"),
                       value: "dynamic-regular",
                     },
                     {
+                      checked: periodType === "weekly",
                       label: "Certain days of the week",
                       tabIndex: currentPage !== 3 ? -1 : undefined,
+                      onChange: () => setPeriodType("weekly"),
                       value: "weekly",
                     },
                     {
-                      label: "Certain days of the month",
+                      checked: periodType === "monthly",
+                      label: "A certain day of the month",
                       tabIndex: currentPage !== 3 ? -1 : undefined,
+                      onChange: () => setPeriodType("monthly"),
                       value: "monthly",
                     },
                   ]}
                 />
+
+                {periodType === "dynamic-regular" ||
+                periodType === "monthly" ? (
+                  <InputField
+                    className="w-full"
+                    errorMessage={formErrors["period_days"] ?? ""}
+                    id="period_days"
+                    name="period_days"
+                    label={
+                      periodType === "dynamic-regular"
+                        ? "How many days?"
+                        : "Which day of the month?"
+                    }
+                    defaultValue="7"
+                    tabIndex={currentPage !== 3 ? -1 : 0}
+                  />
+                ) : null}
+
+                {periodType === "weekly" ? (
+                  <CheckboxesField
+                    id="selectedDays"
+                    title="Who's going to do this chore?"
+                    errorMessage={formErrors.day || ""}
+                    checkboxes={DAYS_OF_WEEK.map((day) => ({
+                      checked: selectedDays.includes(day),
+                      label: day[0].toUpperCase() + day.slice(1),
+                      name: "day",
+                      tabIndex: currentPage !== 3 ? -1 : undefined,
+                      value: day,
+                      onChange: (event) =>
+                        setSelectedDays(
+                          event.currentTarget.checked
+                            ? uniq(selectedDays.concat(day))
+                            : selectedDays.filter(
+                                (selectedDay) => selectedDay !== day,
+                              ),
+                        ),
+                    }))}
+                  />
+                ) : null}
               </div>
 
               <input
@@ -202,18 +277,19 @@ const AddChoreModal: React.FC<{
 
               <input
                 type="hidden"
+                name="period_config"
+                value={DAYS_OF_WEEK.filter((day) =>
+                  selectedDays.includes(day),
+                ).join(",")}
+              />
+
+              <input
+                type="hidden"
                 name="consume_product_on_execution"
                 value={"0"}
               />
 
-              <input type="hidden" name="period_config" value={""} />
-              <input type="hidden" name="period_days" value={"3"} />
               <input type="hidden" name="period_interval" value={"1"} />
-              <input
-                type="hidden"
-                name="period_type"
-                value={"dynamic-regular"}
-              />
               <input type="hidden" name="product_id" value={""} />
               <input type="hidden" name="rollover" value={"1"} />
               <input type="hidden" name="track_date_only" value={"1"} />

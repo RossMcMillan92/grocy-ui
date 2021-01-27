@@ -8,13 +8,18 @@ import ErrorSummary from "./ErrorSummary"
 import Spinner from "./Spinner"
 
 type FormDataObject = Record<string, string>
+type FormErrorsObject = Record<string, string | null | undefined>
 
 type DynamicFormProps = React.FormHTMLAttributes<HTMLFormElement> & {
-  children: ({ isValid }: { isValid: () => boolean }) => React.ReactNode
+  children: ({
+    formErrors,
+    isValid,
+  }: {
+    formErrors: FormErrorsObject
+    isValid: () => boolean
+  }) => React.ReactNode
   editFormData?: (formData: FormDataObject) => FormDataObject
-  getFormErrors?: (
-    formData: Record<string, string>,
-  ) => Record<string, string | null | undefined>
+  getFormErrors?: (formData: Record<string, string>) => FormErrorsObject
   onSuccess: () => void
 }
 
@@ -27,9 +32,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   const [formStatus, setFormStatus] = React.useState<
     "pending" | "submitting" | "successful"
   >("pending")
-  const [formErrors, setFormErrors] = React.useState<
-    Record<string, string | null>
-  >({})
+  const [formErrors, setFormErrors] = React.useState<FormErrorsObject>({})
   const [genericErrors, setGenericErrors] = React.useState<string[]>([])
   const formRef = React.useRef<HTMLFormElement>(null)
   const getFormData = () =>
@@ -106,7 +109,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           "transform transition duration-150",
         )}
       >
-        {props.children({ isValid })}
+        {props.children({ formErrors, isValid })}
       </div>
 
       <div
