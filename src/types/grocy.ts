@@ -11,7 +11,7 @@ export type Chore = {
   chore_id: string
   chore_name: string
   last_tracked_time: string
-  next_estimated_execution_time: string
+  next_estimated_execution_time: string | null
   next_execution_assigned_to_user_id: string | null
   track_date_only: "0" | "1"
 }

@@ -1,6 +1,6 @@
 {
   "name": "Grocy UI",
-  "version": "7",
+  "version": "8",
   "slug": "grocy_ui",
   "description": "A streamlined UI for Grocy",
   "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],

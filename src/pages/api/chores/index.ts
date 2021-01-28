@@ -5,15 +5,13 @@ const handler: NextApiHandler = async (req, res) => {
   res.statusCode = 200
   let chores = await getChores()
 
-  const filterUntil = req.query.until
-  console.log(
-    "🚀 ~ file: index.ts ~ line 9 ~ consthandler:NextApiHandler= ~ filterUntil",
-    filterUntil,
-  )
+  const filterUntil = req.query.until as string | null
+
   if (filterUntil) {
     chores = chores.filter(
       (chore) =>
-        chore.next_estimated_execution_time.split(" ")[0] <= filterUntil,
+        (chore.next_estimated_execution_time?.split(" ")[0] ?? "0") <=
+        filterUntil,
     )
   }
 
