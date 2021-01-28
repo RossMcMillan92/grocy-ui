@@ -5,9 +5,9 @@ ENV LANG C.UTF-8
 
 ADD package.json /
 
-RUN apk add --no-cache nodejs-npm jq && \
-  npm install \
-  npm run build
+RUN apk add --no-cache nodejs-npm jq yarn && \
+  yarn && \
+  yarn build
 
 # Copy data for add-on
 COPY run.sh /
