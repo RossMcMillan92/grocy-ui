@@ -3,10 +3,6 @@ import { withErrorHandling } from "api/error-handling"
 import { NextApiHandler } from "next"
 
 const handler: NextApiHandler = async (req, res) => {
-  console.log(
-    "🚀 ~ file: index.ts ~ line 10 ~ consthandler:NextApiHandler= ~ JSON.stringify(req.body)",
-    JSON.stringify(req.body),
-  )
   const { data, error } = await withErrorHandling(
     createChore(JSON.stringify(req.body)),
   )
