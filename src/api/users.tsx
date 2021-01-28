@@ -1,6 +1,8 @@
 import { GROCY_HOST } from "enums/api"
 import { User } from "types/grocy"
-import { fetchOptions } from "./utils"
+import { getFetchOptions } from "./utils"
 
 export const getUsers = (): Promise<User[]> =>
-  fetch(`http://${GROCY_HOST}/api/users`, fetchOptions).then((d) => d.json())
+  fetch(`http://${GROCY_HOST}/api/users`, getFetchOptions()).then((d) =>
+    d.json(),
+  )

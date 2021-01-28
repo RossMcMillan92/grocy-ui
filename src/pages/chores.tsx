@@ -47,7 +47,7 @@ const ChoresRoute: React.FC<HomeProps> = ({
     { initialData: initialChores },
   )
   const sortedChores = chores
-    ? sortBy((chore) => chore.next_estimated_execution_time ?? "9999", chores)
+    ? sortBy((chore) => chore.next_estimated_execution_time ?? "0", chores)
     : []
   console.log("🚀 ~ file: chores.tsx ~ line 50 ~ sortedChores", sortedChores)
 

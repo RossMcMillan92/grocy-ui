@@ -1,11 +1,11 @@
 import { GROCY_HOST } from "enums/api"
 import { prop, sortBy } from "ramda"
 import { Chore, DetailedChore } from "types/grocy"
-import { fetchOptions } from "./utils"
+import { getFetchOptions } from "./utils"
 
 export const createChore = (formData: string): Promise<DetailedChore> =>
   fetch(`http://${GROCY_HOST}/api/objects/chores`, {
-    ...fetchOptions,
+    ...getFetchOptions(),
     method: "POST",
     body: formData,
   }).then(async (d) => {
@@ -16,21 +16,22 @@ export const createChore = (formData: string): Promise<DetailedChore> =>
   })
 
 export const getChores = (): Promise<Chore[]> =>
-  (fetch(`http://${GROCY_HOST}/api/chores`, fetchOptions).then((d) =>
+  (fetch(`http://${GROCY_HOST}/api/chores`, getFetchOptions()).then((d) =>
     d.json(),
   ) as Promise<Chore[]>).then(sortBy(prop("next_estimated_execution_time")))
 
 export const getChore = (choreId: Chore["chore_id"]): Promise<DetailedChore> =>
-  fetch(`http://${GROCY_HOST}/api/chores/${choreId}`, fetchOptions).then((d) =>
-    d.json(),
-  )
+  fetch(
+    `http://${GROCY_HOST}/api/chores/${choreId}`,
+    getFetchOptions(),
+  ).then((d) => d.json())
 
 export const executeChore = (
   choreId: Chore["chore_id"],
   formData: string,
 ): Promise<DetailedChore> =>
   fetch(`http://${GROCY_HOST}/api/chores/${choreId}/execute`, {
-    ...fetchOptions,
+    ...getFetchOptions({ userId: JSON.parse(formData).done_by }),
     method: "POST",
     body: formData,
   }).then(async (d) => {

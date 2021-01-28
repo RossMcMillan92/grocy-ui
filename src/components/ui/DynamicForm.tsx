@@ -1,5 +1,5 @@
 import { withErrorHandling } from "api/error-handling"
-import { fetchOptions } from "api/utils"
+import { getFetchOptions } from "api/utils"
 import classNames from "helpers/classNames"
 import { CheckCircleOutline } from "heroicons-react"
 import { identity } from "ramda"
@@ -68,7 +68,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
     isValid()
     const { data, error } = await withErrorHandling(
       fetch(props.action, {
-        ...fetchOptions,
+        ...getFetchOptions(),
         body: JSON.stringify(getFormData()),
         method: props.method,
       }).then(async (d) => {
