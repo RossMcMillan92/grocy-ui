@@ -1,11 +1,14 @@
 {
   "name": "Grocy UI",
-  "version": "4",
+  "version": "5",
   "slug": "grocy_ui",
   "description": "A streamlined UI for Grocy",
   "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
   "startup": "application",
   "boot": "auto",
   "options": {},
-  "schema": {}
+  "schema": {},
+  "ports": {
+    "3820/tcp": 3820
+  }
 }
