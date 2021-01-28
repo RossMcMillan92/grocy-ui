@@ -292,12 +292,12 @@ const ChoreTag: React.FC<{
   dueSoonDays: number
 }> = ({ chore, className, dueSoonDays }) => {
   const hoursUntilTomorrow = getHoursUntil(1)
-  const isDueToday = isDueWithin(
-    hoursUntilTomorrow,
-    chore.next_estimated_execution_time,
-  )
+  const isDueToday =
+    chore.next_estimated_execution_time &&
+    isDueWithin(hoursUntilTomorrow, chore.next_estimated_execution_time)
   const isDueTomorrow =
     !isDueToday &&
+    chore.next_estimated_execution_time &&
     isDueWithin(
       hoursUntilTomorrow + 24 * dueSoonDays,
       chore.next_estimated_execution_time,
@@ -324,9 +324,9 @@ const ChoreTag: React.FC<{
 
 function getNextExecutionTime(chore: Chore): React.ReactNode {
   return (
-    inShortTextualDateFormat(chore.next_estimated_execution_time) +
+    inShortTextualDateFormat(chore.next_estimated_execution_time as string) +
     (chore.track_date_only === "0"
-      ? `, ${inTimeFormat(chore.next_estimated_execution_time)}`
+      ? `, ${inTimeFormat(chore.next_estimated_execution_time as string)}`
       : "")
   )
 }
