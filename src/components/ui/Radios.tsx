@@ -90,7 +90,7 @@ const RadioItem: FC<RadioProps & { id: string }> = ({
 
   return (
     <>
-      <div className="flex items-center relative mr-4">
+      <div className="flex items-center relative mr-4 mb-2">
         <input
           checked={checked}
           className="absolute opacity-0"
@@ -101,20 +101,20 @@ const RadioItem: FC<RadioProps & { id: string }> = ({
           type="radio"
           {...additionalProps}
         />
-        <Label
+        <label
           className={classNames(
             "flex-shrink-0 flex items-center",
-            "py-1 px-3 rounded-lg border-2 font-medium",
-            !isChecked && "border-gray-200 text-gray-600",
-            isChecked && "border-gray-200 bg-gray-200 text-gray-700",
+            "py-1 pl-2 pb-1 pr-3 rounded-lg border-2 font-medium",
+            !isChecked && "border-white text-gray-600",
+            isChecked && "border-gray-200 bg-gray-50 text-gray-700",
           )}
           htmlFor={id}
         >
           <div
             className={classNames(
               "flex items-center justify-center",
-              "h-4 w-4 border-2 mr-2 rounded-full",
-              isChecked ? "border-gray-500 bg-gray-200" : "border-gray-300",
+              "h-4 w-4 border-2 mr-3 rounded-full",
+              isChecked ? "border-gray-500 bg-gray-50" : "border-gray-300",
             )}
           >
             <div
@@ -127,7 +127,7 @@ const RadioItem: FC<RadioProps & { id: string }> = ({
             />
           </div>
           {label}
-        </Label>
+        </label>
       </div>
 
       {conditionalRender && (

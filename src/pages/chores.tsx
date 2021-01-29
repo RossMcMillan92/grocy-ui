@@ -16,15 +16,19 @@ import Heading from "components/ui/Heading"
 import React from "react"
 import {
   CheckOutline,
+  ChevronRight,
+  Pencil,
+  PencilAltOutline,
+  PencilOutline,
   PlusOutline,
-  QuestionMarkCircleOutline,
+  QuestionMarkCircle,
 } from "heroicons-react"
 import MultiParagraphs from "components/ui/MultiParagraphs"
 import SummaryList from "components/ui/SummaryList"
 import Tag, { TagColors } from "components/ui/Tag"
 import TrackChoreModal from "components/TrackChoreModal"
 import AddChoreModal from "components/AddChoreModal"
-import { prop, sortBy } from "ramda"
+import { sortBy } from "ramda"
 
 type WithError<T> = T | (Partial<T> & { errorStatus: number })
 type HomeProps = { chores?: Chore[]; dueSoonDays: number }
@@ -49,7 +53,6 @@ const ChoresRoute: React.FC<HomeProps> = ({
   const sortedChores = chores
     ? sortBy((chore) => chore.next_estimated_execution_time ?? "0", chores)
     : []
-  console.log("🚀 ~ file: chores.tsx ~ line 50 ~ sortedChores", sortedChores)
 
   return (
     <>
@@ -121,7 +124,12 @@ const ChoreDetails: React.FC<{ chore: Chore; dueSoonDays: number }> = ({
     : fullChore?.last_done_by?.display_name ?? "Unknown"
 
   return (
-    <div>
+    <div
+      className={classNames(
+        "transition-all duration-150",
+        isOpen && "mb-8 mt-4",
+      )}
+    >
       <div className={classNames("flex items-center", "py-4 w-full")}>
         <button
           className={classNames(
@@ -211,7 +219,7 @@ const ChoreDetails: React.FC<{ chore: Chore; dueSoonDays: number }> = ({
       </div>
       <div
         className={classNames(
-          isOpen && "opacity-100 delay-150 ease-in mb-4",
+          isOpen && "opacity-100 delay-150 ease-in",
           !isOpen && "opacity-0 h-0 ease-out -translate-y-3",
           "overflow-hidden",
           "transform transition-all duration-150",
@@ -221,19 +229,19 @@ const ChoreDetails: React.FC<{ chore: Chore; dueSoonDays: number }> = ({
           <div
             className={classNames(
               "flex items-center justify-between",
-              "text-sm p-2 mb-4",
-              "bg-gray-100 rounded max-w-md",
+              "text-sm p-2 mb-6",
+              "bg-gray-50 rounded max-w-md",
             )}
           >
+            <div className="flex-shrink-0">
+              <PencilAltOutline
+                className={classNames("text-gray-300", "h-6 w-6 mr-2")}
+              />
+            </div>
             <div className="w-full min-w-0 space-y-1">
-              <MultiParagraphs className={classNames("text-gray-800")}>
+              <MultiParagraphs className={classNames("text-gray-800 italic")}>
                 {fullChore?.chore.description}
               </MultiParagraphs>
-            </div>
-            <div className="flex-shrink-0">
-              <QuestionMarkCircleOutline
-                className={classNames("text-gray-300", "h-8 w-8 mx-2")}
-              />
             </div>
           </div>
         ) : null}
@@ -253,12 +261,19 @@ const ChoreDetails: React.FC<{ chore: Chore; dueSoonDays: number }> = ({
                   <ChoreTag chore={chore} dueSoonDays={dueSoonDays} />
                 </>
               ),
+              valueProps: { className: "text-lg" },
+              wrapperProps: {
+                className: "border-l-4 border-gray-300 pl-2 mb-4",
+              },
             },
             {
-              key: "Last time",
+              key: "Previously completed by",
               value: chore.last_tracked_time
                 ? `${lastAssignedUser}, ${getLastExecutionTime(chore)}`
                 : "Not tracked yet",
+              wrapperProps: {
+                className: "border-l-4 border-white pl-2",
+              },
             },
           ]}
         />

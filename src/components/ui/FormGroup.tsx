@@ -16,7 +16,7 @@ const FormGroup: FC<Props> = ({
   <div
     className={classNames(
       "mb-4 transition-all duration-75",
-      hasError && "border-l-2 border-red-500 pl-2",
+      hasError && "border-l-4 border-red-300 pl-2",
       className,
     )}
     {...additionalProps}

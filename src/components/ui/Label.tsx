@@ -22,7 +22,7 @@ const Label: FC<Props> = ({
 }) => (
   <label
     className={classNames(
-      "block mb-1",
+      "block mb-1 text-gray-600",
       size === LabelSizes.XL && "text-xl",
       size === LabelSizes.L && "text-l",
       size === LabelSizes.M && "text-m",

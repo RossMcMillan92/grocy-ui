@@ -19,8 +19,8 @@ export enum HeadingTypes {
 
 const headingTypeClassNameMap = {
   [HeadingTypes.H1]: "text-3xl",
-  [HeadingTypes.H2]: "text-xl",
-  [HeadingTypes.H3]: "small",
+  [HeadingTypes.H2]: "text-2xl",
+  [HeadingTypes.H3]: "text-xl",
   [HeadingTypes.H4]: "small",
   [HeadingTypes.H5]: "small",
   [HeadingTypes.H6]: "small",

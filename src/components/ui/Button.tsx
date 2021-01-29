@@ -52,7 +52,7 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
         variant === ButtonVariants.SECONDARY &&
           "bg-white text-gray-600 border-2 border-gray-200",
         variant === ButtonVariants.POSITIVE &&
-          "bg-green-100 text-green-700 border-2 border-green-100",
+          "bg-green-50 text-green-600 border-2 border-green-100",
         variant === ButtonVariants.WARNING && "bg-red-300 text-red-900",
         className,
       )}

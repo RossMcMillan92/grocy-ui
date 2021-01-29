@@ -15,7 +15,8 @@ const Textarea: FC<Props> = ({
     className={classNames(
       "py-1 px-2",
       "block xs:inline-block w-full",
-      "text-gray-800 text-lg bg-gray-100 rounded appearance-none",
+      "text-gray-800 text-lg bg-gray-50 appearance-none",
+      "border border-gray-300 rounded-lg border-b-2x",
       hasError && "",
       className,
     )}

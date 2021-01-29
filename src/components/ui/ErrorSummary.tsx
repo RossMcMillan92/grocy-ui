@@ -46,7 +46,7 @@ const ErrorSummary: React.FC<Props> = ({
   formErrors = {},
   extendedFormErrors = [],
   genericErrors = [],
-  title = "There is a problem",
+  title = "Not so fast...",
   ...additionalProps
 }) => {
   const ref = React.useRef<HTMLDivElement>(null)
@@ -65,15 +65,15 @@ const ErrorSummary: React.FC<Props> = ({
     <div
       id="error-summary"
       ref={ref}
-      className={classNames("mb-4 border-l-4 border-red-500 pl-2", className)}
+      className={classNames("mb-6 p-4 bg-red-100 rounded-md", className)}
       aria-labelledby="error-summary-title"
       role="alert"
       tabIndex={-1}
       {...additionalProps}
     >
-      <Heading.H2 className="x__title" id="error-summary-title">
+      <Heading.H3 className="text-red-800" id="error-summary-title">
         {title}
-      </Heading.H2>
+      </Heading.H3>
       {renderGenericErrors(genericErrors)}
 
       {(!!children || !!extendedFormErrors.length) && (
@@ -84,6 +84,7 @@ const ErrorSummary: React.FC<Props> = ({
                 <ErrorSummaryListItem
                   key={field}
                   targetName={field}
+                  className="text-red-700"
                   {...additionalProps}
                 >
                   {message}

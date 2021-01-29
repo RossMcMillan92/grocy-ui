@@ -46,15 +46,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
       : {}
 
   const isValid = () => {
-    console.log(
-      "🚀 ~ file: DynamicForm.tsx ~ line 56 ~ isValid ~ formData",
-      getFormData(),
-    )
     const newFormErrors = getFormErrors?.(getFormData()) ?? {}
-    console.log(
-      "🚀 ~ file: DynamicForm.tsx ~ line 39 ~ isValid ~ newFormErrors",
-      newFormErrors,
-    )
     setFormErrors(newFormErrors)
     return Object.values(newFormErrors).filter(Boolean).length === 0
   }

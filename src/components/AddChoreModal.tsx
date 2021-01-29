@@ -160,8 +160,8 @@ const AddChoreModal: React.FC<{
                 />
 
                 {selectedUsers.length === 0 ? (
-                  <p>
-                    When no users are assigned, <em>anyone</em> can do it
+                  <p className="italic text-center px-4 text-gray-600">
+                    When no users are assigned, anyone can complete the chore
                   </p>
                 ) : (
                   <RadiosField
@@ -310,7 +310,7 @@ const AddChoreModal: React.FC<{
               }}
               className="block w-full mb-4"
             >
-              {isLastPage ? "Continue" : "Next"}
+              {isLastPage ? "Save" : "Next"}
             </Button.Positive>
             <Button.Secondary
               className="block w-full"

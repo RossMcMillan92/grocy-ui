@@ -16,7 +16,8 @@ const Select: FC<Props> = ({
       className={classNames(
         "py-1 pl-2 pr-8",
         "block xs:inline-block w-full xs:w-auto",
-        "text-gray-800 text-lg bg-gray-100 rounded appearance-none",
+        "text-gray-800 text-lg bg-gray-50 appearance-none",
+        "border border-gray-300 rounded-lg border-b-2x",
         hasError && "",
         className,
       )}

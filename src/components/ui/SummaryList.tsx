@@ -6,6 +6,7 @@ export type ItemProps = {
   keyProps?: React.HTMLAttributes<HTMLElement>
   value: React.ReactNode
   valueProps?: React.HTMLAttributes<HTMLElement>
+  wrapperProps?: React.HTMLAttributes<HTMLDivElement>
 }
 
 export type Props = React.HTMLAttributes<HTMLElement> & {
@@ -39,15 +40,20 @@ const SummaryList: FC<Props> = ({
             className: individualValueClassName,
             ...individualValueProps
           } = {},
+          wrapperProps: { className: wrapperClassName, ...wrapperProps } = {},
         },
-        index
+        index,
       ) => (
-        <div className="mb-2" key={index}>
+        <div
+          className={classNames(wrapperClassName, "mb-2")}
+          key={index}
+          {...wrapperProps}
+        >
           <dt
             className={classNames(
               "text-sm text-gray-600",
               keyClassName,
-              individualKeyClassName
+              individualKeyClassName,
             )}
             {...keyProps}
             {...individualKeyProps}
@@ -56,9 +62,9 @@ const SummaryList: FC<Props> = ({
           </dt>
           <dd
             className={classNames(
-              "font-medium text-gray-700",
+              "text-gray-700",
               valueClassName,
-              individualValueClassName
+              individualValueClassName,
             )}
             {...valueProps}
             {...individualValueProps}
@@ -66,7 +72,7 @@ const SummaryList: FC<Props> = ({
             {value}
           </dd>
         </div>
-      )
+      ),
     )}
   </dl>
 )
