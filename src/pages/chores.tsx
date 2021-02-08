@@ -307,10 +307,14 @@ const ChoreTag: React.FC<{
   dueSoonDays: number
 }> = ({ chore, className, dueSoonDays }) => {
   const hoursUntilTomorrow = getHoursUntil(1)
+  console.log(
+    "🚀 ~ file: chores.tsx ~ line 310 ~ hoursUntilTomorrow",
+    hoursUntilTomorrow,
+  )
   const isDueToday =
     chore.next_estimated_execution_time &&
     isDueWithin(hoursUntilTomorrow, chore.next_estimated_execution_time)
-  const isDueTomorrow =
+  const isDueSoon =
     !isDueToday &&
     chore.next_estimated_execution_time &&
     isDueWithin(
@@ -320,19 +324,19 @@ const ChoreTag: React.FC<{
   const isUntracked =
     !chore.last_tracked_time && !chore.next_estimated_execution_time
 
-  if (!isUntracked && !isDueToday && !isDueTomorrow) return null
+  if (!isUntracked && !isDueToday && !isDueSoon) return null
+  const color = isDueToday
+    ? TagColors.RED
+    : isDueSoon
+    ? TagColors.YELLOW
+    : TagColors.BLUE
+  console.log("🚀 ~ file: chores.tsx ~ line 325 ~ color", color)
   return (
     <Tag
       className={classNames("transition duration-200 ease-in-out", className)}
-      color={
-        isDueToday
-          ? TagColors.RED
-          : isDueTomorrow
-          ? TagColors.YELLOW
-          : TagColors.BLUE
-      }
+      color={color}
     >
-      {isDueToday ? "Due" : isDueTomorrow ? "Soon" : "Untracked"}
+      {isDueToday ? "Due" : isDueSoon ? "Soon" : "Untracked"}
     </Tag>
   )
 }
