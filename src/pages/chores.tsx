@@ -314,6 +314,7 @@ const ChoreTag: React.FC<{
   const isDueToday =
     chore.next_estimated_execution_time &&
     isDueWithin(hoursUntilTomorrow, chore.next_estimated_execution_time)
+  console.log("🚀 ~ file: chores.tsx ~ line 315 ~ isDueToday", isDueToday)
   const isDueSoon =
     !isDueToday &&
     chore.next_estimated_execution_time &&
@@ -321,8 +322,10 @@ const ChoreTag: React.FC<{
       hoursUntilTomorrow + 24 * dueSoonDays,
       chore.next_estimated_execution_time,
     )
+  console.log("🚀 ~ file: chores.tsx ~ line 319 ~ isDueSoon", isDueSoon)
   const isUntracked =
     !chore.last_tracked_time && !chore.next_estimated_execution_time
+  console.log("🚀 ~ file: chores.tsx ~ line 327 ~ isUntracked", isUntracked)
 
   if (!isUntracked && !isDueToday && !isDueSoon) return null
   const color = isDueToday
