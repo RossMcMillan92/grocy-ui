@@ -307,10 +307,7 @@ const ChoreTag: React.FC<{
   dueSoonDays: number
 }> = ({ chore, className, dueSoonDays }) => {
   const hoursUntilTomorrow = getHoursUntil(1)
-  console.log(
-    "🚀 ~ file: chores.tsx ~ line 310 ~ hoursUntilTomorrow",
-    hoursUntilTomorrow,
-  )
+  console.log("🚀 ~ hoursUntilTomorrow", hoursUntilTomorrow, chore)
   const isDueToday =
     chore.next_estimated_execution_time &&
     isDueWithin(hoursUntilTomorrow, chore.next_estimated_execution_time)
