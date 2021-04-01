@@ -40,9 +40,8 @@ const ChoresRoute: React.FC<HomeProps> = ({
       )
       return data
     },
-    { initialData: initialChores },
+    // { initialData: initialChores },
   )
-  console.log("🚀 ~ chores", chores)
   const sortedChores = chores
     ? sortBy((chore) => chore.next_estimated_execution_time ?? "0", chores)
     : []
