@@ -14,15 +14,7 @@ import {
 } from "helpers/date-utils"
 import Heading from "components/ui/Heading"
 import React from "react"
-import {
-  CheckOutline,
-  ChevronRight,
-  Pencil,
-  PencilAltOutline,
-  PencilOutline,
-  PlusOutline,
-  QuestionMarkCircle,
-} from "heroicons-react"
+import { CheckOutline, PencilAltOutline, PlusOutline } from "heroicons-react"
 import MultiParagraphs from "components/ui/MultiParagraphs"
 import SummaryList from "components/ui/SummaryList"
 import Tag, { TagColors } from "components/ui/Tag"
@@ -50,6 +42,7 @@ const ChoresRoute: React.FC<HomeProps> = ({
     },
     { initialData: initialChores },
   )
+  console.log("🚀 ~ chores", chores)
   const sortedChores = chores
     ? sortBy((chore) => chore.next_estimated_execution_time ?? "0", chores)
     : []
@@ -307,11 +300,9 @@ const ChoreTag: React.FC<{
   dueSoonDays: number
 }> = ({ chore, className, dueSoonDays }) => {
   const hoursUntilTomorrow = getHoursUntil(1)
-  console.log("🚀 ~ hoursUntilTomorrow", hoursUntilTomorrow, chore)
   const isDueToday =
     chore.next_estimated_execution_time &&
     isDueWithin(hoursUntilTomorrow, chore.next_estimated_execution_time)
-  console.log("🚀 ~ file: chores.tsx ~ line 315 ~ isDueToday", isDueToday)
   const isDueSoon =
     !isDueToday &&
     chore.next_estimated_execution_time &&
@@ -319,10 +310,8 @@ const ChoreTag: React.FC<{
       hoursUntilTomorrow + 24 * dueSoonDays,
       chore.next_estimated_execution_time,
     )
-  console.log("🚀 ~ file: chores.tsx ~ line 319 ~ isDueSoon", isDueSoon)
   const isUntracked =
     !chore.last_tracked_time && !chore.next_estimated_execution_time
-  console.log("🚀 ~ file: chores.tsx ~ line 327 ~ isUntracked", isUntracked)
 
   if (!isUntracked && !isDueToday && !isDueSoon) return null
   const color = isDueToday
@@ -330,7 +319,6 @@ const ChoreTag: React.FC<{
     : isDueSoon
     ? TagColors.YELLOW
     : TagColors.BLUE
-  console.log("🚀 ~ file: chores.tsx ~ line 325 ~ color", color)
   return (
     <Tag
       className={classNames("transition duration-200 ease-in-out", className)}
