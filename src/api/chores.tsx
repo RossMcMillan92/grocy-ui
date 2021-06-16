@@ -15,6 +15,36 @@ export const createChore = (formData: string): Promise<DetailedChore> =>
     return data
   })
 
+export const editChore = (
+  choreId: Chore["chore_id"],
+  formData: string,
+): Promise<void> =>
+  fetch(`http://${GROCY_HOST}/api/objects/chores/${choreId}`, {
+    ...getFetchOptions(),
+    method: "PUT",
+    body: formData,
+  }).then(async (d) => {
+    if (d.status < 200 || d.status >= 300) {
+      const data = await d.json()
+      throw new Error(data.error_message ?? data.message)
+    }
+  })
+
+export const deleteChore = (
+  choreId: Chore["chore_id"],
+  formData: string,
+): Promise<void> =>
+  fetch(`http://${GROCY_HOST}/api/objects/chores/${choreId}`, {
+    ...getFetchOptions(),
+    method: "DELETE",
+    body: formData,
+  }).then(async (d) => {
+    if (d.status < 200 || d.status >= 300) {
+      const data = await d.json()
+      throw new Error(data.error_message ?? data.message)
+    }
+  })
+
 export const getChores = (): Promise<Chore[]> =>
   (fetch(`http://${GROCY_HOST}/api/chores`, getFetchOptions()).then((d) =>
     d.json(),

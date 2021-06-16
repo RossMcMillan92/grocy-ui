@@ -1,5 +1,5 @@
 import classNames from "helpers/classNames"
-import { Chore } from "types/grocy"
+import { Chore, DetailedChore } from "types/grocy"
 import { useQueryCache } from "react-query"
 import React from "react"
 import Modal from "components/ui/Modal"
@@ -22,28 +22,33 @@ const DAYS_OF_WEEK = [
   "sunday",
 ]
 const AddChoreModal: React.FC<{
+  chore?: DetailedChore
   chores: Chore[]
   onClose: () => void
-}> = ({ chores, onClose }) => {
+}> = ({ chore, chores, onClose }) => {
   const users = useUsers()
   const [currentPage, setCurrentPage] = React.useState(1)
   const [formStatus, setFormStatus] = React.useState<
     "pending" | "submitting" | "successful"
   >("pending")
-  const [selectedDays, setSelectedDays] = React.useState<String[]>([])
+  const [selectedDays, setSelectedDays] = React.useState<String[]>(
+    chore?.chore.period_config.split(",") ?? [],
+  )
   const [selectedUsers, setSelectedUsers] = React.useState<String[]>(
-    users.map(prop("id")),
+    chore ? chore.chore.assignment_config.split(",") : users.map(prop("id")),
   )
   const [periodType, setPeriodType] = React.useState<
     "dynamic-regular" | "weekly" | "monthly"
-  >("dynamic-regular")
+  >(chore?.chore?.period_type ?? "dynamic-regular")
   const cache = useQueryCache()
   const totalPages = 3
   const isLastPage = currentPage === totalPages
   const isFirstPage = currentPage === 1
+  console.log("🚀 ~ file: AddChoreModal.tsx ~ line 331 ~ chore", chore)
 
   const onSuccess = () => {
     cache.invalidateQueries("chores")
+    if (chore) cache.invalidateQueries(["chore", chore.chore.id])
     setFormStatus("successful")
   }
 
@@ -55,11 +60,11 @@ const AddChoreModal: React.FC<{
   }, [formStatus])
 
   return (
-    <Modal title="Add chore" onRequestClose={onClose}>
+    <Modal title={chore ? "Edit chore" : "Add chore"} onRequestClose={onClose}>
       <DynamicForm
-        action="/api/objects/chores"
+        action={`/api/objects/chores${chore ? `/${chore.chore.id}` : ""}`}
         editFormData={omit(["day", "user"])}
-        method="POST"
+        method={chore ? "PUT" : "POST"}
         onSuccess={onSuccess}
         className="p-4 sm:p-6"
         getFormErrors={(formData) => {
@@ -68,7 +73,8 @@ const AddChoreModal: React.FC<{
               name:
                 (formData.name?.length ?? 0) === 0
                   ? "Enter a chore name"
-                  : chores.some((chore) => chore.chore_name === formData.name)
+                  : !chore &&
+                    chores.some((chore) => chore.chore_name === formData.name)
                   ? "A chore with this name already exists. Enter a unique name"
                   : null,
             }
@@ -118,6 +124,7 @@ const AddChoreModal: React.FC<{
                   id="name"
                   name="name"
                   label="Chore name"
+                  defaultValue={chore?.chore.name}
                   tabIndex={currentPage !== 1 ? -1 : 0}
                 />
                 <TextareaField
@@ -126,6 +133,7 @@ const AddChoreModal: React.FC<{
                   name="description"
                   label="Chore description (optional)"
                   rows={2}
+                  defaultValue={chore?.chore.description}
                   tabIndex={currentPage !== 1 ? -1 : 0}
                 />
               </div>
@@ -170,7 +178,9 @@ const AddChoreModal: React.FC<{
                     title="In which order?"
                     radios={[
                       {
-                        defaultChecked: true,
+                        defaultChecked:
+                          chore?.chore.assignment_type ===
+                            "who-least-did-first" ?? true,
                         label: "Whoever has done it least",
                         tabIndex:
                           currentPage !== 2 || selectedUsers.length === 1
@@ -179,6 +189,9 @@ const AddChoreModal: React.FC<{
                         value: "who-least-did-first",
                       },
                       {
+                        defaultChecked:
+                          chore?.chore.assignment_type ===
+                            "in-alphabetical-order" ?? false,
                         label: "Alphabetic order",
                         tabIndex:
                           currentPage !== 2 || selectedUsers.length === 1
@@ -240,7 +253,7 @@ const AddChoreModal: React.FC<{
                         ? "How many days?"
                         : "Which day of the month?"
                     }
-                    defaultValue="7"
+                    defaultValue={chore?.chore.period_days ?? "7"}
                     tabIndex={currentPage !== 3 ? -1 : 0}
                   />
                 ) : null}

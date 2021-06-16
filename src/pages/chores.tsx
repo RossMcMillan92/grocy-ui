@@ -67,7 +67,11 @@ const ChoresRoute: React.FC<HomeProps> = ({
       <ul className={classNames("divide-y divide-gray-300")}>
         {sortedChores.map((chore) => (
           <li key={chore.chore_id}>
-            <ChoreDetails chore={chore} dueSoonDays={dueSoonDays} />
+            <ChoreDetails
+              chore={chore}
+              chores={sortedChores}
+              dueSoonDays={dueSoonDays}
+            />
           </li>
         ))}
       </ul>
@@ -99,13 +103,14 @@ export const getServerSideProps: GetServerSideProps<
   }
 }
 
-const ChoreDetails: React.FC<{ chore: Chore; dueSoonDays: number }> = ({
-  chore,
-  dueSoonDays,
-}) => {
-  const [status, setStatus] = React.useState<"pending" | "tracking-chore">(
-    "pending",
-  )
+const ChoreDetails: React.FC<{
+  chore: Chore
+  chores: Chore[]
+  dueSoonDays: number
+}> = ({ chore, chores, dueSoonDays }) => {
+  const [status, setStatus] = React.useState<
+    "pending" | "editing-chore" | "tracking-chore"
+  >("pending")
   const { data: fullChore, isLoading } = useChore(chore.chore_id)
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
   const nextAssignedUser = isLoading
@@ -213,7 +218,6 @@ const ChoreDetails: React.FC<{ chore: Chore; dueSoonDays: number }> = ({
         className={classNames(
           isOpen && "opacity-100 delay-150 ease-in",
           !isOpen && "opacity-0 h-0 ease-out -translate-y-3",
-          "overflow-hidden",
           "transform transition-all duration-150",
         )}
       >
@@ -239,6 +243,7 @@ const ChoreDetails: React.FC<{ chore: Chore; dueSoonDays: number }> = ({
         ) : null}
 
         <SummaryList
+          className="-ml-3"
           items={[
             {
               key: "Next up",
@@ -269,12 +274,31 @@ const ChoreDetails: React.FC<{ chore: Chore; dueSoonDays: number }> = ({
             },
           ]}
         />
+
+        <button
+          className={classNames(
+            "flex items-center justify-center",
+            "px-4 py-2 mt-4 rounded",
+            "bg-gray-100 text-gray-700",
+          )}
+          onClick={() => setStatus("editing-chore")}
+        >
+          Edit
+        </button>
       </div>
 
       {status === "tracking-chore" && fullChore ? (
         <TrackChoreModal
           onClose={() => setStatus("pending")}
           chore={fullChore}
+        />
+      ) : null}
+
+      {status === "editing-chore" ? (
+        <AddChoreModal
+          chore={fullChore}
+          chores={chores}
+          onClose={() => setStatus("pending")}
         />
       ) : null}
     </div>

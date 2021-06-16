@@ -32,7 +32,7 @@ export type DetailedChore = {
     period_config: string
     period_days: string
     period_interval: string
-    period_type: "manually" | "dynamic-regular" | "daily" | "weekly" | "monthly"
+    period_type: "dynamic-regular" | "weekly" | "monthly"
     product_id: string
     product_amount: string | null
     rollover: "0" | "1"
