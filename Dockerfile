@@ -3,7 +3,11 @@ FROM $BUILD_FROM
 
 ENV LANG C.UTF-8
 
-RUN apk add --no-cache nodejs-npm jq yarn
+RUN echo "${ALPINE_MIRROR}/v3.11/main/" >> /etc/apk/repositories
+RUN apk add nodejs --repository="http://dl-cdn.alpinelinux.org/alpine/v3.11/main/"
+RUN node --version
+RUN apk add --no-cache jq yarn
+
 
 COPY . .
 RUN yarn --forzen-lockfile
