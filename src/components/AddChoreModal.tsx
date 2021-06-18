@@ -179,8 +179,8 @@ const AddChoreModal: React.FC<{
                     radios={[
                       {
                         defaultChecked:
-                          chore?.chore.assignment_type ===
-                            "who-least-did-first" ?? true,
+                          (chore?.chore.assignment_type ??
+                            "who-least-did-first") === "who-least-did-first",
                         label: "Whoever has done it least",
                         tabIndex:
                           currentPage !== 2 || selectedUsers.length === 1

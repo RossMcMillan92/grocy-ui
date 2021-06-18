@@ -21,6 +21,7 @@ import Tag, { TagColors } from "components/ui/Tag"
 import TrackChoreModal from "components/TrackChoreModal"
 import AddChoreModal from "components/AddChoreModal"
 import { sortBy } from "ramda"
+import RemoveChoreModal from "components/RemoveChoreModal"
 
 type WithError<T> = T | (Partial<T> & { errorStatus: number })
 type HomeProps = { chores?: Chore[]; dueSoonDays: number }
@@ -86,22 +87,22 @@ const ChoresRoute: React.FC<HomeProps> = ({
   )
 }
 
-export const getServerSideProps: GetServerSideProps<
-  WithError<HomeProps>
-> = async () => {
-  const {
-    data: settings,
-    error: settingsError,
-  } = await withErrorHandling<Settings>(getSettings())
-  const { data: chores, error: choresError } = await withErrorHandling<Chore[]>(
-    getChores(),
-  )
+export const getServerSideProps: GetServerSideProps<WithError<HomeProps>> =
+  async () => {
+    const { data: settings, error: settingsError } =
+      await withErrorHandling<Settings>(getSettings())
+    const { data: chores, error: choresError } = await withErrorHandling<
+      Chore[]
+    >(getChores())
 
-  if (choresError || settingsError) return { props: { errorStatus: 500 } }
-  return {
-    props: { chores, dueSoonDays: Number(settings?.chores_due_soon_days ?? 5) },
+    if (choresError || settingsError) return { props: { errorStatus: 500 } }
+    return {
+      props: {
+        chores,
+        dueSoonDays: Number(settings?.chores_due_soon_days ?? 5),
+      },
+    }
   }
-}
 
 const ChoreDetails: React.FC<{
   chore: Chore
@@ -109,7 +110,7 @@ const ChoreDetails: React.FC<{
   dueSoonDays: number
 }> = ({ chore, chores, dueSoonDays }) => {
   const [status, setStatus] = React.useState<
-    "pending" | "editing-chore" | "tracking-chore"
+    "pending" | "editing-chore" | "removing-chore" | "tracking-chore"
   >("pending")
   const { data: fullChore, isLoading } = useChore(chore.chore_id)
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
@@ -120,6 +121,7 @@ const ChoreDetails: React.FC<{
     ? "Loading..."
     : fullChore?.last_done_by?.display_name ?? "Unknown"
 
+  if (!fullChore) return null
   return (
     <div
       className={classNames(
@@ -285,6 +287,17 @@ const ChoreDetails: React.FC<{
         >
           Edit
         </button>
+
+        <button
+          className={classNames(
+            "flex items-center justify-center",
+            "px-4 py-2 mt-4 rounded",
+            "bg-gray-100 text-gray-700",
+          )}
+          onClick={() => setStatus("removing-chore")}
+        >
+          Remove
+        </button>
       </div>
 
       {status === "tracking-chore" && fullChore ? (
@@ -298,6 +311,13 @@ const ChoreDetails: React.FC<{
         <AddChoreModal
           chore={fullChore}
           chores={chores}
+          onClose={() => setStatus("pending")}
+        />
+      ) : null}
+
+      {status === "removing-chore" ? (
+        <RemoveChoreModal
+          chore={fullChore}
           onClose={() => setStatus("pending")}
         />
       ) : null}
