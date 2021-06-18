@@ -1,5 +1,5 @@
-import classNames from "helpers/classNames"
 import React, { FC } from "react"
+import classNames from "helpers/classNames"
 
 export type Props = React.InputHTMLAttributes<HTMLSelectElement> & {
   hasError?: boolean
@@ -11,7 +11,7 @@ const Select: FC<Props> = ({
   hasError = false,
   ...additionalProps
 }) => (
-  <div className="relative block xs:inline-block w-full xs:w-auto">
+  <div className="relative block w-full xs:inline-block xs:w-auto">
     <select
       className={classNames(
         "py-1 pl-2 pr-8",
@@ -26,7 +26,7 @@ const Select: FC<Props> = ({
       {children}
     </select>
 
-    <div className="absolute top-0 right-2 bottom-0 w-6 flex items-center justify-center pointer-events-none">
+    <div className="absolute top-0 bottom-0 flex items-center justify-center w-6 pointer-events-none right-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="10"

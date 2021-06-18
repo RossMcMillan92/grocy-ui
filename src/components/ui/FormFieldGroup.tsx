@@ -1,5 +1,5 @@
-import { HeadingSizes, HeadingTypes } from "./Heading"
 import { Props as CheckboxesProps } from "./Checkboxes"
+import { HeadingSizes, HeadingTypes } from "./Heading"
 import { Props as RadioProps } from "./Radios"
 import ErrorMessage, { Props as ErrorMessageProps } from "./ErrorMessage"
 import Fieldset, { Props as FieldsetProps } from "./Fieldset"

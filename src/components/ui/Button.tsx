@@ -1,6 +1,6 @@
-import classNames from "helpers/classNames"
 import React from "react"
 import Spinner from "./Spinner"
+import classNames from "helpers/classNames"
 
 export enum ButtonVariants {
   DEFAULT = "default",

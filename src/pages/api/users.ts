@@ -1,5 +1,5 @@
-import { getUsers } from "api/users"
 import { NextApiHandler } from "next"
+import { getUsers } from "api/users"
 
 const handler: NextApiHandler = async (req, res) => {
   res.statusCode = 200

@@ -1,11 +1,11 @@
-import { withErrorHandling } from "api/error-handling"
-import { getFetchOptions } from "api/utils"
-import classNames from "helpers/classNames"
 import { CheckCircleOutline } from "heroicons-react"
+import { getFetchOptions } from "api/utils"
 import { identity } from "ramda"
-import React from "react"
+import { withErrorHandling } from "api/error-handling"
 import ErrorSummary from "./ErrorSummary"
+import React from "react"
 import Spinner from "./Spinner"
+import classNames from "helpers/classNames"
 
 type FormDataObject = Record<string, string>
 type FormErrorsObject = Record<string, string | null | undefined>

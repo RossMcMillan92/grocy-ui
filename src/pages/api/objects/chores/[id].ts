@@ -1,6 +1,6 @@
+import { NextApiHandler } from "next"
 import { deleteChore, editChore } from "api/chores"
 import { withErrorHandling } from "api/error-handling"
-import { NextApiHandler } from "next"
 
 const handler: NextApiHandler = async (req, res) => {
   if (!req.query.id || Array.isArray(req.query.id)) {

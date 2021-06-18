@@ -1,6 +1,6 @@
+import { NextApiHandler } from "next"
 import { executeChore } from "api/chores"
 import { withErrorHandling } from "api/error-handling"
-import { NextApiHandler } from "next"
 
 const handler: NextApiHandler = async ({ query: { choreId }, ...req }, res) => {
   res.statusCode = 200

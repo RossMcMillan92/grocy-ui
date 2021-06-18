@@ -1,5 +1,5 @@
-import React, { FC } from "react"
 import Paragraph from "./Paragraph"
+import React, { FC } from "react"
 
 const NEW_LINE_REGEX = /\r?\n/
 

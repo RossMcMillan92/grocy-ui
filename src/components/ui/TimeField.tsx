@@ -1,8 +1,8 @@
+import { inTimeFormat } from "helpers/date-utils"
+import { omit } from "ramda"
 import FormField, { Props as FormFieldProps } from "./FormField"
 import React, { FC } from "react"
 import classNames from "helpers/classNames"
-import { inTimeFormat } from "helpers/date-utils"
-import { omit } from "ramda"
 
 export type Props = Omit<FormFieldProps, "renderInput"> &
   React.InputHTMLAttributes<HTMLInputElement>

@@ -1,19 +1,19 @@
-import classNames from "helpers/classNames"
-import { DetailedChore } from "types/grocy"
-import { useQueryCache } from "react-query"
-import React from "react"
 import { CheckCircleOutline } from "heroicons-react"
+import { DetailedChore } from "types/grocy"
+import { inDateFormat, inTimeFormat } from "helpers/date-utils"
+import { useQueryCache } from "react-query"
+import { useUsers } from "contexts/users"
+import Button from "components/ui/Button"
+import DateField from "components/ui/DateField"
+import DynamicForm from "components/ui/DynamicForm"
 import Modal from "components/ui/Modal"
 import Paragraph from "components/ui/Paragraph"
-import { useUsers } from "contexts/users"
-import SelectField from "components/ui/SelectField"
-import DateField from "components/ui/DateField"
-import TimeField from "components/ui/TimeField"
-import Button from "components/ui/Button"
-import DynamicForm from "components/ui/DynamicForm"
 import RadiosField from "./ui/RadiosField"
+import React from "react"
+import SelectField from "components/ui/SelectField"
+import TimeField from "components/ui/TimeField"
+import classNames from "helpers/classNames"
 import dayjs from "dayjs"
-import { inDateFormat, inTimeFormat } from "helpers/date-utils"
 
 const TrackChoreModal: React.FC<{
   chore: DetailedChore
@@ -30,7 +30,7 @@ const TrackChoreModal: React.FC<{
   const [dateInput, setDateInput] = React.useState<string>(inDateFormat())
   const [timeInput, setTimeInput] = React.useState<string>(inTimeFormat())
   const dateTracked = dayjs(
-    selectedTime === "now" ? undefined : dateInput + "T" + timeInput,
+    selectedTime === "now" ? undefined : `${dateInput  }T${  timeInput}`,
   ).format("YYYY-MM-DD HH:mm:ss")
 
   const onSuccess = () => {
@@ -58,7 +58,7 @@ const TrackChoreModal: React.FC<{
           <>
             <div className="mb-8">
               <div className="flex items-center mb-6">
-                <CheckCircleOutline className="text-green-500 mr-2 h-8 w-8" />
+                <CheckCircleOutline className="w-8 h-8 mr-2 text-green-500" />
                 <Paragraph className={classNames("text-xl font-medium")}>
                   {chore.chore.name}
                 </Paragraph>

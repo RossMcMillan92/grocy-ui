@@ -1,27 +1,27 @@
-import PageTitle from "components/PageTitle/PageTitle"
-import classNames from "helpers/classNames"
-import { GetServerSideProps } from "next"
+import { CheckOutline, PencilAltOutline, PlusOutline } from "heroicons-react"
 import { Chore, DetailedChore, Settings } from "types/grocy"
-import { withErrorHandling } from "api/error-handling"
-import { useQuery } from "react-query"
+import { GetServerSideProps } from "next"
 import { getChores } from "api/chores"
-import { getSettings } from "api/settings"
 import {
   getHoursUntil,
   inShortTextualDateFormat,
   inTimeFormat,
   isDueWithin,
 } from "helpers/date-utils"
+import { getSettings } from "api/settings"
+import { sortBy } from "ramda"
+import { useQuery } from "react-query"
+import { withErrorHandling } from "api/error-handling"
+import AddChoreModal from "components/AddChoreModal"
 import Heading from "components/ui/Heading"
-import React from "react"
-import { CheckOutline, PencilAltOutline, PlusOutline } from "heroicons-react"
 import MultiParagraphs from "components/ui/MultiParagraphs"
+import PageTitle from "components/PageTitle/PageTitle"
+import React from "react"
+import RemoveChoreModal from "components/RemoveChoreModal"
 import SummaryList from "components/ui/SummaryList"
 import Tag, { TagColors } from "components/ui/Tag"
 import TrackChoreModal from "components/TrackChoreModal"
-import AddChoreModal from "components/AddChoreModal"
-import { sortBy } from "ramda"
-import RemoveChoreModal from "components/RemoveChoreModal"
+import classNames from "helpers/classNames"
 
 type WithError<T> = T | (Partial<T> & { errorStatus: number })
 type HomeProps = { chores?: Chore[]; dueSoonDays: number }
@@ -157,7 +157,7 @@ const ChoreDetails: React.FC<{
                 "flex items-center",
               )}
             >
-              <div className="min-w-0 truncate mr-2">{chore.chore_name}</div>
+              <div className="min-w-0 mr-2 truncate">{chore.chore_name}</div>
 
               <ChoreTag
                 chore={chore}
@@ -277,27 +277,30 @@ const ChoreDetails: React.FC<{
           ]}
         />
 
-        <button
-          className={classNames(
-            "flex items-center justify-center",
-            "px-4 py-2 mt-4 rounded",
-            "bg-gray-100 text-gray-700",
-          )}
-          onClick={() => setStatus("editing-chore")}
-        >
-          Edit
-        </button>
+        <div className={classNames("flex")}>
+          <button
+            className={classNames(
+              "flex items-center justify-center",
+              "px-4 py-2 mt-4 rounded",
+              "bg-gray-100 text-gray-700",
+              "mr-2",
+            )}
+            onClick={() => setStatus("editing-chore")}
+          >
+            Edit
+          </button>
 
-        <button
-          className={classNames(
-            "flex items-center justify-center",
-            "px-4 py-2 mt-4 rounded",
-            "bg-gray-100 text-gray-700",
-          )}
-          onClick={() => setStatus("removing-chore")}
-        >
-          Remove
-        </button>
+          <button
+            className={classNames(
+              "flex items-center justify-center",
+              "px-4 py-2 mt-4 rounded",
+              "bg-gray-100 text-gray-700",
+            )}
+            onClick={() => setStatus("removing-chore")}
+          >
+            Remove
+          </button>
+        </div>
       </div>
 
       {status === "tracking-chore" && fullChore ? (

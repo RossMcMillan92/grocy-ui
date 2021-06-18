@@ -1,5 +1,5 @@
-import classNames from "helpers/classNames"
 import React, { FC } from "react"
+import classNames from "helpers/classNames"
 
 export enum LabelSizes {
   XL = "xl",

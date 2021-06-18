@@ -1,5 +1,5 @@
-import FormFieldGroup, { Props as FormFieldGroupProps } from "./FormFieldGroup"
 import Checkboxes, { Props as CheckboxesProps } from "./Checkboxes"
+import FormFieldGroup, { Props as FormFieldGroupProps } from "./FormFieldGroup"
 import React, { FC } from "react"
 
 export type Props = Omit<FormFieldGroupProps, "renderInput"> & CheckboxesProps

@@ -1,11 +1,11 @@
-import classNames from "helpers/classNames"
 import { Chore, DetailedChore } from "types/grocy"
+import { omit } from "ramda"
 import { useQueryCache } from "react-query"
-import React from "react"
-import Modal from "components/ui/Modal"
 import Button from "components/ui/Button"
 import DynamicForm from "components/ui/DynamicForm"
-import { omit } from "ramda"
+import Modal from "components/ui/Modal"
+import React from "react"
+import classNames from "helpers/classNames"
 
 const RemoveChoreModal: React.FC<{
   chore: DetailedChore

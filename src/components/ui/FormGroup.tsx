@@ -1,6 +1,6 @@
-import classNames from "helpers/classNames"
 import PropTypes from "prop-types"
 import React, { FC } from "react"
+import classNames from "helpers/classNames"
 
 export type Props = React.HTMLAttributes<HTMLDivElement> & {
   hasError?: boolean

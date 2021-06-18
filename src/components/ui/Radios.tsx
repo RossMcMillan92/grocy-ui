@@ -90,7 +90,7 @@ const RadioItem: FC<RadioProps & { id: string }> = ({
 
   return (
     <>
-      <div className="flex items-center relative mr-4 mb-2">
+      <div className="relative flex items-center mb-2 mr-4">
         <input
           checked={checked}
           className="absolute opacity-0"

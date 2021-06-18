@@ -97,17 +97,17 @@ const Modal: React.FC<ModalProps> = ({
               isTransitioning && "scale-90 opacity-0",
             )}
           >
-            <div className="flex justify-between px-4 pt-4 sm:px-6 sm:pt-6 bg-gray-100">
+            <div className="flex justify-between px-4 pt-4 bg-gray-100 sm:px-6 sm:pt-6">
               <Heading.H2 className={classNames("text-gray-700 mb-4")}>
                 {title}
               </Heading.H2>
 
               <button
-                className="w-12 h-12 -mr-3 -mt-2 flex items-center justify-center"
+                className="flex items-center justify-center w-12 h-12 -mt-2 -mr-3"
                 onClick={onClose}
                 aria-label={`Exit ${title}`}
               >
-                <XOutline className="w-7 h-7 text-gray-500" />
+                <XOutline className="text-gray-500 w-7 h-7" />
               </button>
             </div>
 

@@ -1,5 +1,5 @@
-import { getChores } from "api/chores"
 import { NextApiHandler } from "next"
+import { getChores } from "api/chores"
 
 const handler: NextApiHandler = async (req, res) => {
   res.statusCode = 200

@@ -1,5 +1,5 @@
-import classNames from "helpers/classNames"
 import React, { FC } from "react"
+import classNames from "helpers/classNames"
 
 export type Props = React.HTMLAttributes<HTMLSpanElement> & {
   children: React.ReactNode

@@ -1,7 +1,7 @@
-import { GROCY_HOST } from "enums/api"
-import { prop, sortBy } from "ramda"
 import { Chore, DetailedChore } from "types/grocy"
+import { GROCY_HOST } from "enums/api"
 import { getFetchOptions } from "./utils"
+import { prop, sortBy } from "ramda"
 
 export const createChore = (formData: string): Promise<DetailedChore> =>
   fetch(`http://${GROCY_HOST}/api/objects/chores`, {

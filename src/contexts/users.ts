@@ -1,5 +1,5 @@
-import React from "react"
 import { User } from "types/grocy"
+import React from "react"
 
 const UsersContext = React.createContext<User[]>([])
 

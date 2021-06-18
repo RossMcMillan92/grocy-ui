@@ -1,16 +1,16 @@
-import classNames from "helpers/classNames"
 import { Chore, DetailedChore } from "types/grocy"
+import { omit, prop, uniq } from "ramda"
 import { useQueryCache } from "react-query"
-import React from "react"
-import Modal from "components/ui/Modal"
 import { useUsers } from "contexts/users"
 import Button from "components/ui/Button"
-import DynamicForm from "components/ui/DynamicForm"
-import RadiosField from "./ui/RadiosField"
-import InputField from "./ui/InputField"
-import TextareaField from "./ui/TextareaField"
 import CheckboxesField from "./ui/CheckboxesField"
-import { omit, prop, uniq } from "ramda"
+import DynamicForm from "components/ui/DynamicForm"
+import InputField from "./ui/InputField"
+import Modal from "components/ui/Modal"
+import RadiosField from "./ui/RadiosField"
+import React from "react"
+import TextareaField from "./ui/TextareaField"
+import classNames from "helpers/classNames"
 
 const DAYS_OF_WEEK = [
   "monday",
@@ -31,10 +31,10 @@ const AddChoreModal: React.FC<{
   const [formStatus, setFormStatus] = React.useState<
     "pending" | "submitting" | "successful"
   >("pending")
-  const [selectedDays, setSelectedDays] = React.useState<String[]>(
+  const [selectedDays, setSelectedDays] = React.useState<string[]>(
     chore?.chore.period_config.split(",") ?? [],
   )
-  const [selectedUsers, setSelectedUsers] = React.useState<String[]>(
+  const [selectedUsers, setSelectedUsers] = React.useState<string[]>(
     chore ? chore.chore.assignment_config.split(",") : users.map(prop("id")),
   )
   const [periodType, setPeriodType] = React.useState<
@@ -44,7 +44,6 @@ const AddChoreModal: React.FC<{
   const totalPages = 3
   const isLastPage = currentPage === totalPages
   const isFirstPage = currentPage === 1
-  console.log("🚀 ~ file: AddChoreModal.tsx ~ line 331 ~ chore", chore)
 
   const onSuccess = () => {
     cache.invalidateQueries("chores")
@@ -168,7 +167,7 @@ const AddChoreModal: React.FC<{
                 />
 
                 {selectedUsers.length === 0 ? (
-                  <p className="italic text-center px-4 text-gray-600">
+                  <p className="px-4 italic text-center text-gray-600">
                     When no users are assigned, anyone can complete the chore
                   </p>
                 ) : (
