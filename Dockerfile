@@ -13,7 +13,7 @@ RUN apk add --no-cache jq yarn
 COPY . .
 RUN yarn --forzen-lockfile
 RUN yarn build
-RUN rm -rf node_modules src
+RUN rm -rf src
 
 # Copy data for add-on
 RUN chmod a+x /run.sh
