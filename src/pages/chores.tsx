@@ -129,7 +129,7 @@ const ChoreDetails: React.FC<{
         isOpen && "mb-8 mt-4",
       )}
     >
-      <div className={classNames("flex items-center", "py-4 w-full")}>
+      <div className={classNames("flex items-center z-10 relative", "py-4 w-full")}>
         <button
           className={classNames(
             "flex items-center",
@@ -219,7 +219,7 @@ const ChoreDetails: React.FC<{
       <div
         className={classNames(
           isOpen && "opacity-100 delay-150 ease-in",
-          !isOpen && "opacity-0 h-0 ease-out -translate-y-3",
+          !isOpen && "opacity-0 h-0 ease-out -translate-y-3 z-0 relative",
           "transform transition-all duration-150",
         )}
       >
