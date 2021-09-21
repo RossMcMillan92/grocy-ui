@@ -8,34 +8,35 @@
     "start": "next start -p 3820"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.168",
-    "@types/ramda": "^0.27.39",
-    "@types/react-modal": "^3.12.0",
+    "@types/fluent-ffmpeg": "^2.1.18",
+    "@types/lodash": "^4.14.173",
+    "@types/ramda": "^0.27.44",
+    "@types/react-modal": "^3.12.1",
     "@types/react-query": "^1.1.2",
-    "@typescript-eslint/eslint-plugin": "^4.27.0",
-    "autoprefixer": "^10.2.5",
-    "dayjs": "^1.10.4",
+    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "autoprefixer": "^10.3.4",
+    "dayjs": "^1.10.7",
     "dom-form-serializer": "^1.0.8",
-    "eslint": "^7.23.0",
+    "eslint": "^7.32.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
     "eslint-plugin-tailwind": "^0.2.1",
     "focus-visible": "^5.2.0",
     "heroicons-react": "1.4.1",
-    "next": "11.0.0",
-    "postcss": "^8.2.9",
-    "prettier": "^2.2.1",
+    "next": "11.1.2",
+    "postcss": "^8.3.6",
+    "prettier": "^2.4.1",
     "ramda": "^0.27.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-modal": "^3.12.1",
-    "react-query": "^2.26.4",
-    "tailwindcss": "^2.0.4"
+    "react-query": "^3.24.3",
+    "tailwindcss": "^2.2.15"
   },
   "devDependencies": {
     "@types/node": "^14.14.37",
-    "@types/react": "^17.0.3",
-    "eslint-config-next": "^11.0.0",
-    "typescript": "^4.2.3"
+    "@types/react": "^17.0.22",
+    "eslint-config-next": "^11.1.2",
+    "typescript": "^4.4.3"
   }
 }

@@ -1,5 +1,6 @@
 import { Chore, DetailedChore } from "types/grocy"
 import { omit, prop, uniq } from "ramda"
+import { toString } from "lodash/fp"
 import { useQueryCache } from "react-query"
 import { useUsers } from "contexts/users"
 import Button from "components/ui/Button"
@@ -35,7 +36,9 @@ const AddChoreModal: React.FC<{
     chore?.chore.period_config.split(",") ?? [],
   )
   const [selectedUsers, setSelectedUsers] = React.useState<string[]>(
-    chore ? chore.chore.assignment_config.split(",") : users.map(prop("id")),
+    chore
+      ? `${chore.chore.assignment_config}`.split(",")
+      : users.map(prop("id")).map(toString),
   )
   const [periodType, setPeriodType] = React.useState<
     "dynamic-regular" | "weekly" | "monthly"
@@ -148,22 +151,25 @@ const AddChoreModal: React.FC<{
                 <CheckboxesField
                   id="users"
                   title="Who's going to do this chore?"
-                  checkboxes={users.map((user) => ({
-                    checked: selectedUsers.includes(user.id),
-                    label: user.display_name,
-                    name: "user",
-                    tabIndex: currentPage !== 2 ? -1 : undefined,
-                    value: user.id,
-                    onChange: (event) =>
-                      setSelectedUsers(
-                        (event.currentTarget.checked
-                          ? uniq(selectedUsers.concat(user.id))
-                          : selectedUsers.filter(
-                              (selectedUser) => selectedUser !== user.id,
-                            )
-                        ).sort(),
-                      ),
-                  }))}
+                  checkboxes={users.map((user) => {
+                    const userId = `${user.id}`
+                    return {
+                      checked: selectedUsers.includes(userId),
+                      label: user.display_name,
+                      name: "user",
+                      tabIndex: currentPage !== 2 ? -1 : undefined,
+                      value: userId,
+                      onChange: (event) =>
+                        setSelectedUsers(
+                          (event.currentTarget.checked
+                            ? uniq(selectedUsers.concat(userId))
+                            : selectedUsers.filter(
+                                (selectedUser) => selectedUser !== userId,
+                              )
+                          ).sort(),
+                        ),
+                    }
+                  })}
                 />
 
                 {selectedUsers.length === 0 ? (

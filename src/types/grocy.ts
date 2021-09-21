@@ -18,7 +18,7 @@ export type Chore = {
 
 export type DetailedChore = {
   chore: {
-    assignment_config: string
+    assignment_config?: string | number
     assignment_type:
       | "no-assignment"
       | "who-least-did-first"
@@ -99,7 +99,7 @@ export type Settings = {
 }
 
 export type User = {
-  id: string
+  id: string | number
   username: string
   first_name: string
   last_name: string
