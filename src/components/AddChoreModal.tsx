@@ -1,6 +1,5 @@
 import { Chore, DetailedChore } from "types/grocy"
 import { omit, prop, uniq } from "ramda"
-import { toString } from "lodash/fp"
 import { useQueryCache } from "react-query"
 import { useUsers } from "contexts/users"
 import Button from "components/ui/Button"
@@ -38,7 +37,7 @@ const AddChoreModal: React.FC<{
   const [selectedUsers, setSelectedUsers] = React.useState<string[]>(
     chore
       ? `${chore.chore.assignment_config}`.split(",")
-      : users.map(prop("id")).map(toString),
+      : users.map(prop("id")).map((x) => `${x}`),
   )
   const [periodType, setPeriodType] = React.useState<
     "dynamic-regular" | "weekly" | "monthly"
