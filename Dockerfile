@@ -10,16 +10,11 @@ RUN node --version
 RUN apk add --no-cache jq yarn 
 
 
+COPY . .
 RUN yarn --frozen-lockfile
 RUN yarn build
 RUN rm -rf src node_modules
 RUN yarn --frozen-lockfile --production
-COPY node_modules .
-COPY ./.next .
-COPY ./*.js .
-COPY ./*.json .
-COPY ./*.sh .
-COPY ./*.ts .
 
 # Copy data for add-on
 RUN chmod a+x /run.sh
