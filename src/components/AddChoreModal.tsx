@@ -40,8 +40,8 @@ const AddChoreModal: React.FC<{
       : users.map(prop("id")).map((x) => `${x}`),
   )
   const [periodType, setPeriodType] = React.useState<
-    "dynamic-regular" | "weekly" | "monthly"
-  >(chore?.chore?.period_type ?? "dynamic-regular")
+    "daily" | "weekly" | "monthly"
+  >(chore?.chore?.period_type ?? "daily")
   const cache = useQueryCache()
   const totalPages = 3
   const isLastPage = currentPage === totalPages
@@ -88,7 +88,7 @@ const AddChoreModal: React.FC<{
           if (currentPage === 3) {
             return {
               period_days:
-                periodType === "dynamic-regular" &&
+                periodType === "daily" &&
                 (Number.isNaN(Number(formData.period_days)) ||
                   Number(formData.period_days) < 1)
                   ? "Enter a number above 0"
@@ -222,11 +222,11 @@ const AddChoreModal: React.FC<{
                   title="When will this chore be done?"
                   radios={[
                     {
-                      checked: periodType === "dynamic-regular",
+                      checked: periodType === "daily",
                       label: 'Once every "X" days',
                       tabIndex: currentPage !== 3 ? -1 : undefined,
-                      onChange: () => setPeriodType("dynamic-regular"),
-                      value: "dynamic-regular",
+                      onChange: () => setPeriodType("daily"),
+                      value: "daily",
                     },
                     {
                       checked: periodType === "weekly",
@@ -245,15 +245,14 @@ const AddChoreModal: React.FC<{
                   ]}
                 />
 
-                {periodType === "dynamic-regular" ||
-                periodType === "monthly" ? (
+                {periodType === "daily" || periodType === "monthly" ? (
                   <InputField
                     className="w-full"
                     errorMessage={formErrors["period_days"] ?? ""}
                     id="period_days"
                     name="period_days"
                     label={
-                      periodType === "dynamic-regular"
+                      periodType === "daily"
                         ? "How many days?"
                         : "Which day of the month?"
                     }

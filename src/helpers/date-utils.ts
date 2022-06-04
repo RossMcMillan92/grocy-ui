@@ -10,8 +10,10 @@ export const SHORT_TEXTUAL_DATE_FORMAT = "D MMM YYYY"
 
 dayjs.extend(advancedFormat)
 
-export const formatDate = (format: string) => (dateString?: string): string =>
-  dayjs(dateString).format(format)
+export const formatDate =
+  (format: string) =>
+  (dateString?: string): string =>
+    dayjs(dateString).format(format)
 
 // e.g. 1st November 2000
 export const inTextualDateFormat = formatDate(TEXTUAL_DATE_FORMAT)
@@ -33,11 +35,17 @@ export const inTimeFormat = formatDate(TIME_FORMAT)
 // e.g 2019
 export const fullYear = new Date().getFullYear()
 
-export const isDueWithin = (hours: number, date: string) =>
-  dayjs().add(hours, "hour").isAfter(dayjs(date))
+export const isDueWithin = (hours: number, date: string) => {
+  const time1 = dayjs(
+    dayjs().add(hours, "hour").toISOString().split("T")[0],
+  ).add(1, "day")
+  const givenTime = dayjs(date)
+  return time1.isAfter(givenTime)
+}
 
 export const getRoundedDay = (offset: number) =>
   dayjs().add(offset, "day").toISOString().split("T")[0]
 
-export const getHoursUntil = (offset: number) =>
-  dayjs(getRoundedDay(offset)).diff(dayjs(), "hour")
+export const getHoursUntil = (offset: number) => {
+  return dayjs(getRoundedDay(offset)).diff(dayjs(), "hour")
+}

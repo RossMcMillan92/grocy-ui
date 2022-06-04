@@ -87,22 +87,23 @@ const ChoresRoute: React.FC<HomeProps> = ({
   )
 }
 
-export const getServerSideProps: GetServerSideProps<WithError<HomeProps>> =
-  async () => {
-    const { data: settings, error: settingsError } =
-      await withErrorHandling<Settings>(getSettings())
-    const { data: chores, error: choresError } = await withErrorHandling<
-      Chore[]
-    >(getChores())
+export const getServerSideProps: GetServerSideProps<
+  WithError<HomeProps>
+> = async () => {
+  const { data: settings, error: settingsError } =
+    await withErrorHandling<Settings>(getSettings())
+  const { data: chores, error: choresError } = await withErrorHandling<Chore[]>(
+    getChores(),
+  )
 
-    if (choresError || settingsError) return { props: { errorStatus: 500 } }
-    return {
-      props: {
-        chores,
-        dueSoonDays: Number(settings?.chores_due_soon_days ?? 5),
-      },
-    }
+  if (choresError || settingsError) return { props: { errorStatus: 500 } }
+  return {
+    props: {
+      chores,
+      dueSoonDays: Number(settings?.chores_due_soon_days ?? 5),
+    },
   }
+}
 
 const ChoreDetails: React.FC<{
   chore: Chore
@@ -129,7 +130,9 @@ const ChoreDetails: React.FC<{
         isOpen && "mb-8 mt-4",
       )}
     >
-      <div className={classNames("flex items-center z-10 relative", "py-4 w-full")}>
+      <div
+        className={classNames("flex items-center z-10 relative", "py-4 w-full")}
+      >
         <button
           className={classNames(
             "flex items-center",
@@ -346,6 +349,7 @@ const ChoreTag: React.FC<{
   dueSoonDays: number
 }> = ({ chore, className, dueSoonDays }) => {
   const hoursUntilTomorrow = getHoursUntil(1)
+
   const isDueToday =
     chore.next_estimated_execution_time &&
     isDueWithin(hoursUntilTomorrow, chore.next_estimated_execution_time)

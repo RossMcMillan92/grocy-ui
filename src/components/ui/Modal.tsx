@@ -59,6 +59,7 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <ReactModal
       isOpen={true}
+      shouldReturnFocusAfterClose={false}
       bodyOpenClassName="overflow-hidden"
       style={{
         overlay: { backgroundColor: "transparent", zIndex: 9999 },
