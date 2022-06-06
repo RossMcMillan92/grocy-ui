@@ -1,8 +1,9 @@
 # https://developers.home-assistant.io/docs/add-ons/configuration#add-on-config
 name: Grocy UI
-version: 37
+version: 38
 slug: grocy_ui
 description: A streamlined UI for Grocy
+url: "https://github.com/RossMcMillan92/grocy-ui"
 arch:
   - armhf
   - armv7
