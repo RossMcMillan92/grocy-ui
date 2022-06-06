@@ -87,15 +87,15 @@ const AddChoreModal: React.FC<{
 
           if (currentPage === 3) {
             return {
-              period_days:
+              period_interval:
                 periodType === "daily" &&
-                (Number.isNaN(Number(formData.period_days)) ||
-                  Number(formData.period_days) < 1)
+                (Number.isNaN(Number(formData.period_interval)) ||
+                  Number(formData.period_interval) < 1)
                   ? "Enter a number above 0"
                   : periodType === "monthly" &&
-                    (Number.isNaN(Number(formData.period_days)) ||
-                      Number(formData.period_days) < 1 ||
-                      Number(formData.period_days) > 31)
+                    (Number.isNaN(Number(formData.period_interval)) ||
+                      Number(formData.period_interval) < 1 ||
+                      Number(formData.period_interval) > 31)
                   ? "Enter a number between 1 and 31"
                   : null,
               day:
@@ -248,15 +248,15 @@ const AddChoreModal: React.FC<{
                 {periodType === "daily" || periodType === "monthly" ? (
                   <InputField
                     className="w-full"
-                    errorMessage={formErrors["period_days"] ?? ""}
-                    id="period_days"
-                    name="period_days"
+                    errorMessage={formErrors["period_interval"] ?? ""}
+                    id="period_interval"
+                    name="period_interval"
                     label={
                       periodType === "daily"
                         ? "How many days?"
                         : "Which day of the month?"
                     }
-                    defaultValue={chore?.chore.period_days ?? "7"}
+                    defaultValue={chore?.chore.period_interval ?? "7"}
                     tabIndex={currentPage !== 3 ? -1 : 0}
                   />
                 ) : null}
@@ -305,7 +305,6 @@ const AddChoreModal: React.FC<{
                 value={"0"}
               />
 
-              <input type="hidden" name="period_interval" value={"1"} />
               <input type="hidden" name="product_id" value={""} />
               <input type="hidden" name="rollover" value={"1"} />
               <input type="hidden" name="track_date_only" value={"1"} />
