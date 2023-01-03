@@ -245,20 +245,31 @@ const AddChoreModal: React.FC<{
                   ]}
                 />
 
-                {periodType === "daily" || periodType === "monthly" ? (
+                {periodType === "daily" ? (
                   <InputField
                     className="w-full"
                     errorMessage={formErrors["period_interval"] ?? ""}
                     id="period_interval"
                     name="period_interval"
-                    label={
-                      periodType === "daily"
-                        ? "How many days?"
-                        : "Which day of the month?"
-                    }
+                    label={"How many days?"}
                     defaultValue={chore?.chore.period_interval ?? "7"}
                     tabIndex={currentPage !== 3 ? -1 : 0}
                   />
+                ) : null}
+
+                {periodType === "monthly" ? (
+                  <>
+                    <InputField
+                      className="w-full"
+                      errorMessage={formErrors["period_days"] ?? ""}
+                      id="period_days"
+                      name="period_days"
+                      label={"Which day of the month?"}
+                      defaultValue={chore?.chore.period_days ?? "7"}
+                      tabIndex={currentPage !== 3 ? -1 : 0}
+                    />
+                    <input type="hidden" name="period_interval" value="1" />
+                  </>
                 ) : null}
 
                 {periodType === "weekly" ? (

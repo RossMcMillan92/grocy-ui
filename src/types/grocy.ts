@@ -30,6 +30,7 @@ export type DetailedChore = {
     name: string
     next_execution_assigned_to_user_id: string
     period_config: string
+    period_days: string
     period_interval: string
     period_type: "daily" | "weekly" | "monthly"
     product_id: string
