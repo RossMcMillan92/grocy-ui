@@ -156,7 +156,14 @@ const ChoreDetails: React.FC<{
                 "flex items-center",
               )}
             >
-              <div className="min-w-0 mr-2 truncate">{chore.chore.name}</div>
+              <div
+                className={classNames(
+                  "min-w-0 mr-2",
+                  isOpen ? "pr-20" : "truncate",
+                )}
+              >
+                {chore.chore.name}
+              </div>
 
               <ChoreTag
                 chore={chore}
