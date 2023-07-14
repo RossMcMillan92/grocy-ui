@@ -1,11 +1,9 @@
-import { Chore, DetailedChore } from "types/grocy"
-import { omit } from "ramda"
-import { useQueryCache } from "react-query"
+import { DetailedChore } from "types/grocy"
+import { useRouter } from "next/navigation"
 import Button from "components/ui/Button"
 import DynamicForm from "components/ui/DynamicForm"
 import Modal from "components/ui/Modal"
 import React from "react"
-import classNames from "helpers/classNames"
 
 const RemoveChoreModal: React.FC<{
   chore: DetailedChore
@@ -14,11 +12,11 @@ const RemoveChoreModal: React.FC<{
   const [formStatus, setFormStatus] = React.useState<
     "pending" | "submitting" | "successful"
   >("pending")
-  const cache = useQueryCache()
+  const { refresh } = useRouter()
 
   const onSuccess = () => {
-    cache.invalidateQueries("chores")
     setFormStatus("successful")
+    refresh()
   }
 
   React.useEffect(() => {

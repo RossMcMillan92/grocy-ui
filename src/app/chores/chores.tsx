@@ -1,17 +1,15 @@
+"use client"
+
 import { CheckOutline, PencilAltOutline, PlusOutline } from "heroicons-react"
-import { Chore, DetailedChore, Settings } from "types/grocy"
-import { GetServerSideProps } from "next"
-import { getChores } from "api/chores"
+import { DetailedChore } from "types/grocy"
 import {
   getHoursUntil,
   inShortTextualDateFormat,
   inTimeFormat,
   isDueWithin,
 } from "helpers/date-utils"
-import { getSettings } from "api/settings"
 import { sortBy } from "ramda"
-import { useQuery } from "react-query"
-import { withErrorHandling } from "api/error-handling"
+import { useUsers } from "contexts/users"
 import AddChoreModal from "components/AddChoreModal"
 import Heading from "components/ui/Heading"
 import MultiParagraphs from "components/ui/MultiParagraphs"
@@ -23,33 +21,26 @@ import Tag, { TagColors } from "components/ui/Tag"
 import TrackChoreModal from "components/TrackChoreModal"
 import classNames from "helpers/classNames"
 
-type WithError<T> = T | (Partial<T> & { errorStatus: number })
-type HomeProps = { chores?: Chore[]; dueSoonDays: number }
+type HomeProps = { chores?: DetailedChore[]; dueSoonDays: number }
 
-const ChoresRoute: React.FC<HomeProps> = ({
-  chores: initialChores,
-  dueSoonDays,
-}) => {
+const ChoresPage = ({ chores, dueSoonDays }: HomeProps) => {
+  const users = useUsers()
   const [status, setStatus] = React.useState<"pending" | "adding-chore">(
     "pending",
   )
-  const { data: chores } = useQuery(
-    "chores",
-    async () => {
-      const { data } = await withErrorHandling<Chore[]>(
-        fetch(`/api/chores`).then((d) => d.json()) as Promise<Chore[]>,
-      )
-      return data
-    },
-    { placeholderData: initialChores },
-  )
+
   const sortedChores = chores
     ? sortBy((chore) => chore.next_estimated_execution_time ?? "0", chores)
     : []
 
+  const choresDoneToday = sortedChores.filter(
+    (chore) =>
+      new Date(chore.last_tracked).toDateString() === new Date().toDateString(),
+  )
   return (
     <>
       <PageTitle>Chores</PageTitle>
+
       <div className={classNames("flex items-center justify-between", "mb-8")}>
         <Heading.H1 className={classNames("")}>Chores</Heading.H1>
         <button
@@ -65,9 +56,38 @@ const ChoresRoute: React.FC<HomeProps> = ({
         </button>
       </div>
 
+      <div className="">
+        <div
+          className={classNames(
+            choresDoneToday.length > 0
+              ? "bg-lime-100 text-lime-800"
+              : "bg-slate-100 text-slate-800",
+            " font-medium",
+            "rounded py-2 px-4 mb-8",
+          )}
+        >
+          <div className="mb-2 text-2xl">
+            {choresDoneToday.length} done today
+            {choresDoneToday.length > 0 ? `! 🎉` : " 😔"}
+          </div>
+          <div className="opacity-90">
+            {users.map((user) => {
+              const amount = choresDoneToday.filter(
+                (chore) => chore.last_done_by?.id === user.id,
+              ).length
+              return (
+                <div key={user.id}>
+                  {amount} by {user.display_name} {amount > 0 ? "😄" : "😔"}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+
       <ul className={classNames("divide-y divide-gray-300")}>
         {sortedChores.map((chore) => (
-          <li key={chore.chore_id}>
+          <li key={chore.chore.id}>
             <ChoreDetails
               chore={chore}
               chores={sortedChores}
@@ -76,7 +96,6 @@ const ChoresRoute: React.FC<HomeProps> = ({
           </li>
         ))}
       </ul>
-
       {status === "adding-chore" ? (
         <AddChoreModal
           chores={sortedChores}
@@ -87,42 +106,19 @@ const ChoresRoute: React.FC<HomeProps> = ({
   )
 }
 
-export const getServerSideProps: GetServerSideProps<
-  WithError<HomeProps>
-> = async () => {
-  const { data: settings, error: settingsError } =
-    await withErrorHandling<Settings>(getSettings())
-  const { data: chores, error: choresError } = await withErrorHandling<Chore[]>(
-    getChores(),
-  )
-
-  if (choresError || settingsError) return { props: { errorStatus: 500 } }
-  return {
-    props: {
-      chores,
-      dueSoonDays: Number(settings?.chores_due_soon_days ?? 5),
-    },
-  }
-}
-
 const ChoreDetails: React.FC<{
-  chore: Chore
-  chores: Chore[]
+  chore: DetailedChore
+  chores: DetailedChore[]
   dueSoonDays: number
 }> = ({ chore, chores, dueSoonDays }) => {
   const [status, setStatus] = React.useState<
     "pending" | "editing-chore" | "removing-chore" | "tracking-chore"
   >("pending")
-  const { data: fullChore, isLoading } = useChore(chore.chore_id)
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
-  const nextAssignedUser = isLoading
-    ? "Loading..."
-    : fullChore?.next_execution_assigned_user?.display_name ?? "Anyone"
-  const lastAssignedUser = isLoading
-    ? "Loading..."
-    : fullChore?.last_done_by?.display_name ?? "Unknown"
+  const nextAssignedUser =
+    chore?.next_execution_assigned_user?.display_name ?? "Anyone"
+  const lastAssignedUser = chore?.last_done_by?.display_name ?? "Unknown"
 
-  if (!fullChore) return null
   return (
     <div
       className={classNames(
@@ -160,7 +156,7 @@ const ChoreDetails: React.FC<{
                 "flex items-center",
               )}
             >
-              <div className="min-w-0 mr-2 truncate">{chore.chore_name}</div>
+              <div className="min-w-0 mr-2 truncate">{chore.chore.name}</div>
 
               <ChoreTag
                 chore={chore}
@@ -226,7 +222,7 @@ const ChoreDetails: React.FC<{
           "transform transition-all duration-150",
         )}
       >
-        {fullChore?.chore.description ? (
+        {chore?.chore.description ? (
           <div
             className={classNames(
               "flex items-center justify-between",
@@ -241,7 +237,7 @@ const ChoreDetails: React.FC<{
             </div>
             <div className="w-full min-w-0 space-y-1">
               <MultiParagraphs className={classNames("text-gray-800 italic")}>
-                {fullChore?.chore.description}
+                {chore?.chore.description}
               </MultiParagraphs>
             </div>
           </div>
@@ -270,7 +266,7 @@ const ChoreDetails: React.FC<{
             },
             {
               key: "Previously completed by",
-              value: chore.last_tracked_time
+              value: chore.last_tracked
                 ? `${lastAssignedUser}, ${getLastExecutionTime(chore)}`
                 : "Not tracked yet",
               wrapperProps: {
@@ -306,45 +302,29 @@ const ChoreDetails: React.FC<{
         </div>
       </div>
 
-      {status === "tracking-chore" && fullChore ? (
-        <TrackChoreModal
-          onClose={() => setStatus("pending")}
-          chore={fullChore}
-        />
+      {status === "tracking-chore" && chore ? (
+        <TrackChoreModal onClose={() => setStatus("pending")} chore={chore} />
       ) : null}
 
       {status === "editing-chore" ? (
         <AddChoreModal
-          chore={fullChore}
+          chore={chore}
           chores={chores}
           onClose={() => setStatus("pending")}
         />
       ) : null}
 
       {status === "removing-chore" ? (
-        <RemoveChoreModal
-          chore={fullChore}
-          onClose={() => setStatus("pending")}
-        />
+        <RemoveChoreModal chore={chore} onClose={() => setStatus("pending")} />
       ) : null}
     </div>
   )
 }
 
-const useChore = (choreId: Chore["chore_id"]) =>
-  useQuery(["chore", choreId], async () => {
-    const { data } = await withErrorHandling<DetailedChore>(
-      fetch(`/api/chores/${choreId}`).then((d) =>
-        d.json(),
-      ) as Promise<DetailedChore>,
-    )
-    return data
-  })
-
-export default ChoresRoute
+export default ChoresPage
 
 const ChoreTag: React.FC<{
-  chore: Chore
+  chore: DetailedChore
   className?: string
   dueSoonDays: number
 }> = ({ chore, className, dueSoonDays }) => {
@@ -361,7 +341,7 @@ const ChoreTag: React.FC<{
       chore.next_estimated_execution_time,
     )
   const isUntracked =
-    !chore.last_tracked_time && !chore.next_estimated_execution_time
+    !chore.last_tracked && !chore.next_estimated_execution_time
 
   if (!isUntracked && !isDueToday && !isDueSoon) return null
   const color = isDueToday
@@ -379,20 +359,20 @@ const ChoreTag: React.FC<{
   )
 }
 
-function getNextExecutionTime(chore: Chore): React.ReactNode {
+function getNextExecutionTime(chore: DetailedChore): React.ReactNode {
   return (
     inShortTextualDateFormat(chore.next_estimated_execution_time as string) +
-    (chore.track_date_only === "0"
+    (chore.chore.track_date_only === "0"
       ? `, ${inTimeFormat(chore.next_estimated_execution_time as string)}`
       : "")
   )
 }
 
-function getLastExecutionTime(chore: Chore): React.ReactNode {
+function getLastExecutionTime(chore: DetailedChore): React.ReactNode {
   return (
-    inShortTextualDateFormat(chore.last_tracked_time) +
-    (chore.track_date_only === "0"
-      ? `, ${inTimeFormat(chore.last_tracked_time)}`
+    inShortTextualDateFormat(chore.last_tracked) +
+    (chore.chore.track_date_only === "0"
+      ? `, ${inTimeFormat(chore.last_tracked)}`
       : "")
   )
 }

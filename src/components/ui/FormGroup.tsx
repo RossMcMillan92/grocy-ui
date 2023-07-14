@@ -1,4 +1,3 @@
-import PropTypes from "prop-types"
 import React, { FC } from "react"
 import classNames from "helpers/classNames"
 
@@ -24,15 +23,5 @@ const FormGroup: FC<Props> = ({
     {children}
   </div>
 )
-
-FormGroup.propTypes = {
-  className: PropTypes.string,
-  children: PropTypes.node.isRequired,
-  hasError: PropTypes.bool,
-}
-
-FormGroup.defaultProps = {
-  hasError: false,
-}
 
 export default FormGroup

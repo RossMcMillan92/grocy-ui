@@ -44,7 +44,6 @@ export type Props = React.HTMLAttributes<HTMLHeadingElement> & {
 const Heading: FC<Props> & IHeadingComposition = ({
   children,
   className,
-  size,
   type = HeadingTypes.H1,
   ...additionalProps
 }) => {
@@ -55,10 +54,6 @@ const Heading: FC<Props> & IHeadingComposition = ({
       {children}
     </HeadingType>
   )
-}
-
-Heading.defaultProps = {
-  type: HeadingTypes.H1,
 }
 
 Heading.H1 = (props) => <Heading {...props} type={HeadingTypes.H1} />

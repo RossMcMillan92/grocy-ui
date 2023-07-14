@@ -46,15 +46,17 @@ export const deleteChore = (
   })
 
 export const getChores = (): Promise<Chore[]> =>
-  (fetch(`http://${GROCY_HOST}/api/chores`, getFetchOptions()).then((d) =>
-    d.json(),
-  ) as Promise<Chore[]>).then(sortBy(prop("next_estimated_execution_time")))
+  (
+    fetch(`http://${GROCY_HOST}/api/chores`, {
+      ...getFetchOptions(),
+      next: { revalidate: 0 },
+    }).then((d) => d.json()) as Promise<Chore[]>
+  ).then(sortBy(prop("next_estimated_execution_time")))
 
 export const getChore = (choreId: Chore["chore_id"]): Promise<DetailedChore> =>
-  fetch(
-    `http://${GROCY_HOST}/api/chores/${choreId}`,
-    getFetchOptions(),
-  ).then((d) => d.json())
+  fetch(`http://${GROCY_HOST}/api/chores/${choreId}`, getFetchOptions()).then(
+    (d) => d.json(),
+  )
 
 export const executeChore = (
   choreId: Chore["chore_id"],

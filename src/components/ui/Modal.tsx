@@ -1,6 +1,6 @@
 import { APP_CONTAINER_ID } from "pages/_app"
 import { XOutline } from "heroicons-react"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import Heading from "./Heading"
 import React from "react"
 import ReactModal from "react-modal"
@@ -25,7 +25,6 @@ const Modal: React.FC<ModalProps> = ({
   title,
   ...props
 }) => {
-  const router = useRouter()
   const [isTransitioning, setIsTransitioning] = React.useState(true)
 
   React.useEffect(() => {
@@ -34,25 +33,7 @@ const Modal: React.FC<ModalProps> = ({
     })
   }, [])
 
-  React.useEffect(() => {
-    router.push(`${document.location.pathname}#modal`, undefined, {
-      shallow: true,
-    })
-
-    const cb = () => {
-      onRequestClose()
-    }
-    window.addEventListener("hashchange", cb)
-
-    return () => {
-      window.removeEventListener("hashchange", cb)
-    }
-  }, [])
-
   const onClose = () => {
-    router.replace(`${document.location.pathname}`, undefined, {
-      shallow: true,
-    })
     onRequestClose()
   }
 

@@ -10,7 +10,10 @@ import classNames from "helpers/classNames"
 type FormDataObject = Record<string, string>
 type FormErrorsObject = Record<string, string | null | undefined>
 
-type DynamicFormProps = React.FormHTMLAttributes<HTMLFormElement> & {
+type DynamicFormProps = Omit<
+  React.FormHTMLAttributes<HTMLFormElement>,
+  "children"
+> & {
   children: ({
     formErrors,
     isValid,
@@ -59,7 +62,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
 
     isValid()
     const { data, error } = await withErrorHandling(
-      fetch(props.action, {
+      fetch(props.action as string, {
         ...getFetchOptions(),
         body: JSON.stringify(getFormData()),
         method: props.method,

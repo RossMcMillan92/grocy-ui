@@ -22,6 +22,7 @@ module.exports = {
     semi: 0,
     "no-console": "error",
     "prefer-template": "error",
+    "react/react-in-jsx-scope": 0,
     "react/display-name": 0,
     "react/prop-types": 0,
     "react-hooks/rules-of-hooks": "error",
@@ -40,4 +41,4 @@ module.exports = {
       version: "detect",
     },
   },
-};
+}

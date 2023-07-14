@@ -1,6 +1,6 @@
-import { Chore, DetailedChore } from "types/grocy"
+import { DetailedChore } from "types/grocy"
 import { omit, prop, uniq } from "ramda"
-import { useQueryCache } from "react-query"
+import { useRouter } from "next/navigation"
 import { useUsers } from "contexts/users"
 import Button from "components/ui/Button"
 import CheckboxesField from "./ui/CheckboxesField"
@@ -23,7 +23,7 @@ const DAYS_OF_WEEK = [
 ]
 const AddChoreModal: React.FC<{
   chore?: DetailedChore
-  chores: Chore[]
+  chores: DetailedChore[]
   onClose: () => void
 }> = ({ chore, chores, onClose }) => {
   const users = useUsers()
@@ -42,15 +42,14 @@ const AddChoreModal: React.FC<{
   const [periodType, setPeriodType] = React.useState<
     "daily" | "weekly" | "monthly"
   >(chore?.chore?.period_type ?? "daily")
-  const cache = useQueryCache()
   const totalPages = 3
   const isLastPage = currentPage === totalPages
   const isFirstPage = currentPage === 1
+  const { refresh } = useRouter()
 
   const onSuccess = () => {
-    cache.invalidateQueries("chores")
-    if (chore) cache.invalidateQueries(["chore", chore.chore.id])
     setFormStatus("successful")
+    refresh()
   }
 
   React.useEffect(() => {
@@ -75,7 +74,7 @@ const AddChoreModal: React.FC<{
                 (formData.name?.length ?? 0) === 0
                   ? "Enter a chore name"
                   : !chore &&
-                    chores.some((chore) => chore.chore_name === formData.name)
+                    chores.some((chore) => chore.chore.name === formData.name)
                   ? "A chore with this name already exists. Enter a unique name"
                   : null,
             }

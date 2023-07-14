@@ -1,7 +1,7 @@
 import { CheckCircleOutline } from "heroicons-react"
 import { DetailedChore } from "types/grocy"
 import { inDateFormat, inTimeFormat } from "helpers/date-utils"
-import { useQueryCache } from "react-query"
+import { useRouter } from "next/navigation"
 import { useUsers } from "contexts/users"
 import Button from "components/ui/Button"
 import DateField from "components/ui/DateField"
@@ -23,20 +23,19 @@ const TrackChoreModal: React.FC<{
     "pending" | "submitting" | "successful"
   >("pending")
   const users = useUsers()
-  const cache = useQueryCache()
   const [selectedTime, setSelectedTime] = React.useState<"now" | "specific">(
     "now",
   )
   const [dateInput, setDateInput] = React.useState<string>(inDateFormat())
   const [timeInput, setTimeInput] = React.useState<string>(inTimeFormat())
   const dateTracked = dayjs(
-    selectedTime === "now" ? undefined : `${dateInput  }T${  timeInput}`,
+    selectedTime === "now" ? undefined : `${dateInput}T${timeInput}`,
   ).format("YYYY-MM-DD HH:mm:ss")
+  const { refresh } = useRouter()
 
   const onSuccess = () => {
-    cache.invalidateQueries("chores")
-    cache.invalidateQueries(["chore", chore.chore.id])
     setFormStatus("successful")
+    refresh()
   }
 
   React.useEffect(() => {
@@ -45,6 +44,11 @@ const TrackChoreModal: React.FC<{
       return () => clearTimeout(timeout)
     }
   }, [formStatus])
+
+  const [defaultUser, setDefaultUser] = useLocalStorage(
+    "defaultUser",
+    chore.next_execution_assigned_user?.id ?? "0",
+  )
 
   return (
     <Modal title="Track chore" onRequestClose={onClose}>
@@ -68,7 +72,8 @@ const TrackChoreModal: React.FC<{
                 label="Completed by"
                 id="user"
                 name="done_by"
-                defaultValue={chore.next_execution_assigned_user?.id ?? "0"}
+                defaultValue={defaultUser}
+                onChange={(event) => setDefaultUser(event.target.value)}
               >
                 <option value="0">Not assigned</option>
 
@@ -144,3 +149,19 @@ const TrackChoreModal: React.FC<{
 }
 
 export default TrackChoreModal
+
+const useLocalStorage = <T extends string | number | boolean>(
+  key: string,
+  defaultValue: T,
+) => {
+  const [value, setValue] = React.useState<T>(() => {
+    const storedValue = localStorage.getItem(key)
+    return storedValue ? (storedValue as T) : defaultValue
+  })
+
+  React.useEffect(() => {
+    localStorage.setItem(key, value.toString())
+  }, [key, value])
+
+  return [value, setValue] as const
+}
