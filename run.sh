@@ -5,7 +5,7 @@ CONFIG_PATH=/data/options.json
 CONNECTION_STRING="$(jq --raw-output '.connectionString' $CONFIG_PATH)"
 WATCH="$(jq --raw-output '.watch' $CONFIG_PATH)"
 
-echo Hello!
+echo Starting GrocyUI!
 node -v
 npm -v
 npm run start
