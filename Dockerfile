@@ -1,29 +1,22 @@
 ARG BUILD_FROM
 FROM $BUILD_FROM
 
-RUN echo "GROCY-UI: hello!"
-
 ENV LANG C.UTF-8
 
-RUN echo "GROCY-UI: installing dependencies"
-RUN apk add --no-cache \
-    nodejs \
-    npm \
-    git \
-    jq \
-    yarn
+RUN echo "${ALPINE_MIRROR}/v3.18/main/" >> /etc/apk/repositories
+RUN apk add nodejs --repository="http://dl-cdn.alpinelinux.org/alpine/v3.18/main/"
+RUN apk add npm --repository="http://dl-cdn.alpinelinux.org/alpine/v3.18/main/"
+RUN node --version
+RUN apk add --no-cache jq yarn 
 
 
-RUN echo "GROCY-UI: copying files"
 COPY . .
-RUN echo "GROCY-UI: running yarn install"
 RUN yarn --frozen-lockfile
-RUN echo "GROCY-UI: running yarn build"
 RUN yarn build
+RUN rm -rf src node_modules
+RUN yarn --frozen-lockfile --production
 
 # Copy data for add-on
 RUN chmod a+x /run.sh
 
-RUN echo "GROCY-UI: running run.sh"
 CMD [ "/run.sh" ]
-RUN echo "GROCY-UI: finished building"
