@@ -1,6 +1,7 @@
-RUN echo "GROCY-UI: hello!"
 ARG BUILD_FROM
 FROM $BUILD_FROM
+
+RUN echo "GROCY-UI: hello!"
 
 ENV LANG C.UTF-8
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
