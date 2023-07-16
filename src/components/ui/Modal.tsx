@@ -1,10 +1,12 @@
-import { APP_CONTAINER_ID } from "pages/_app"
+"use client"
+
 import { XOutline } from "heroicons-react"
-import { useRouter } from "next/navigation"
 import Heading from "./Heading"
 import React from "react"
 import ReactModal from "react-modal"
 import classNames from "helpers/classNames"
+
+export const APP_CONTAINER_ID = "app-container"
 
 if (
   typeof window !== "undefined" &&
@@ -38,6 +40,8 @@ const Modal: React.FC<ModalProps> = ({
   }
 
   return (
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore - ReactModal typings are incorrect.
     <ReactModal
       isOpen={true}
       shouldReturnFocusAfterClose={false}

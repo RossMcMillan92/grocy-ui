@@ -1,3 +1,4 @@
+"use client"
 import Paragraph from "./Paragraph"
 import React, { FC } from "react"
 

@@ -1,3 +1,4 @@
+"use client"
 import { CheckCircleOutline } from "heroicons-react"
 import { DetailedChore } from "types/grocy"
 import { inDateFormat, inTimeFormat } from "helpers/date-utils"

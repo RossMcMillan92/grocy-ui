@@ -1,3 +1,4 @@
+"use client"
 import { DetailedChore } from "types/grocy"
 import { useRouter } from "next/navigation"
 import Button from "components/ui/Button"

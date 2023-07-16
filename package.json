@@ -13,7 +13,7 @@
     "dom-form-serializer": "^2.0.0",
     "focus-visible": "^5.2.0",
     "heroicons-react": "1.4.1",
-    "next": "13.4.10",
+    "next": "13.x.x",
     "postcss": "^8.4.26",
     "ramda": "^0.29.0",
     "react": "^18.2.0",

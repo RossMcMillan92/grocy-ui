@@ -1,3 +1,4 @@
+"use client"
 import { DetailedChore } from "types/grocy"
 import { omit, prop, uniq } from "ramda"
 import { useRouter } from "next/navigation"

@@ -13,7 +13,6 @@ import { useUsers } from "contexts/users"
 import AddChoreModal from "components/AddChoreModal"
 import Heading from "components/ui/Heading"
 import MultiParagraphs from "components/ui/MultiParagraphs"
-import PageTitle from "components/PageTitle/PageTitle"
 import React from "react"
 import RemoveChoreModal from "components/RemoveChoreModal"
 import SummaryList from "components/ui/SummaryList"
@@ -39,8 +38,6 @@ const ChoresPage = ({ chores, dueSoonDays }: HomeProps) => {
   )
   return (
     <>
-      <PageTitle>Chores</PageTitle>
-
       <div className={classNames("flex items-center justify-between", "mb-8")}>
         <Heading.H1 className={classNames("")}>Chores</Heading.H1>
         <button

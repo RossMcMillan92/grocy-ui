@@ -1,4 +1,3 @@
-import PropTypes from "prop-types"
 import React, { FC } from "react"
 import classNames from "helpers/classNames"
 
@@ -17,10 +16,5 @@ const ErrorMessage: FC<Props> = ({
     {children}
   </span>
 )
-
-ErrorMessage.propTypes = {
-  children: PropTypes.node.isRequired,
-  className: PropTypes.string,
-}
 
 export default ErrorMessage

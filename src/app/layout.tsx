@@ -1,3 +1,4 @@
+import { APP_CONTAINER_ID } from "components/ui/Modal"
 import { NextResponse } from "next/server"
 import { User } from "types/grocy"
 import { UsersProvider } from "contexts/users"
@@ -26,5 +27,3 @@ export default async function Layout({
     </html>
   )
 }
-
-export const APP_CONTAINER_ID = "app-container"

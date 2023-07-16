@@ -6,7 +6,6 @@ import ErrorMessage, { Props as ErrorMessageProps } from "./ErrorMessage"
 import FormGroup, { Props as FormGroupProps } from "./FormGroup"
 import Hint, { Props as HintProps } from "./Hint"
 import Label, { Props as LabelProps } from "./Label"
-import PropTypes from "prop-types"
 import React, { FC } from "react"
 
 export type Props = {
@@ -67,15 +66,5 @@ const FormField: FC<Props> = ({
       })}
   </FormGroup>
 )
-
-FormField.propTypes = {
-  errorMessage: PropTypes.string,
-  hint: PropTypes.node,
-  id: PropTypes.string.isRequired,
-  isLoading: PropTypes.bool,
-  label: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  renderInput: PropTypes.func.isRequired,
-}
 
 export default FormField
