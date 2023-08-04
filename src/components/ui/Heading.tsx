@@ -27,22 +27,13 @@ const headingTypeClassNameMap = {
   [HeadingTypes.H6]: "small",
 }
 
-export interface IHeadingComposition {
-  H1: FC<Props>
-  H2: FC<Props>
-  H3: FC<Props>
-  H4: FC<Props>
-  H5: FC<Props>
-  H6: FC<Props>
-}
-
 export type Props = React.HTMLAttributes<HTMLHeadingElement> & {
   size?: HeadingSizes
   type?: HeadingTypes
   children: React.ReactNode
 }
 
-const Heading: FC<Props> & IHeadingComposition = ({
+const Heading: FC<Props> = ({
   children,
   className,
   type = HeadingTypes.H1,
@@ -57,17 +48,23 @@ const Heading: FC<Props> & IHeadingComposition = ({
   )
 }
 
-Heading.H1 = (props) => <Heading {...props} type={HeadingTypes.H1} />
-Heading.H2 = (props) => <Heading {...props} type={HeadingTypes.H2} />
-Heading.H3 = (props) => <Heading {...props} type={HeadingTypes.H3} />
-Heading.H4 = (props) => <Heading {...props} type={HeadingTypes.H4} />
-Heading.H5 = (props) => <Heading {...props} type={HeadingTypes.H5} />
-Heading.H6 = (props) => <Heading {...props} type={HeadingTypes.H6} />
-Heading.H1.displayName = "Heading.H1"
-Heading.H2.displayName = "Heading.H2"
-Heading.H3.displayName = "Heading.H3"
-Heading.H4.displayName = "Heading.H4"
-Heading.H5.displayName = "Heading.H5"
-Heading.H6.displayName = "Heading.H6"
+export const H1 = (props: Props) => (
+  <Heading {...props} type={HeadingTypes.H1} />
+)
+export const H2 = (props: Props) => (
+  <Heading {...props} type={HeadingTypes.H2} />
+)
+export const H3 = (props: Props) => (
+  <Heading {...props} type={HeadingTypes.H3} />
+)
+export const H4 = (props: Props) => (
+  <Heading {...props} type={HeadingTypes.H4} />
+)
+export const H5 = (props: Props) => (
+  <Heading {...props} type={HeadingTypes.H5} />
+)
+export const H6 = (props: Props) => (
+  <Heading {...props} type={HeadingTypes.H6} />
+)
 
 export default Heading

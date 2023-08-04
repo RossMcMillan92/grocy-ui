@@ -1,5 +1,5 @@
 "use client"
-import { DetailedChore } from "types/grocy"
+import { Chore, DetailedChore } from "types/grocy"
 import { omit, prop, uniq } from "ramda"
 import { useRouter } from "next/navigation"
 import { useUsers } from "contexts/users"
@@ -24,7 +24,7 @@ const DAYS_OF_WEEK = [
 ]
 const AddChoreModal: React.FC<{
   chore?: DetailedChore
-  chores: DetailedChore[]
+  chores: Chore[]
   onClose: () => void
 }> = ({ chore, chores, onClose }) => {
   const users = useUsers()
@@ -75,7 +75,7 @@ const AddChoreModal: React.FC<{
                 (formData.name?.length ?? 0) === 0
                   ? "Enter a chore name"
                   : !chore &&
-                    chores.some((chore) => chore.chore.name === formData.name)
+                    chores.some((chore) => chore.chore_name === formData.name)
                   ? "A chore with this name already exists. Enter a unique name"
                   : null,
             }

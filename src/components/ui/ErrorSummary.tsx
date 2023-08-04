@@ -1,5 +1,5 @@
+import { H3 } from "./Heading"
 import ErrorSummaryListItem from "./ErrorSummaryListItem"
-import Heading from "./Heading"
 import Paragraph from "./Paragraph"
 import React from "react"
 import classNames from "helpers/classNames"
@@ -71,9 +71,9 @@ const ErrorSummary: React.FC<Props> = ({
       tabIndex={-1}
       {...additionalProps}
     >
-      <Heading.H3 className="text-red-800" id="error-summary-title">
+      <H3 className="text-red-800" id="error-summary-title">
         {title}
-      </Heading.H3>
+      </H3>
       {renderGenericErrors(genericErrors)}
 
       {(!!children || !!extendedFormErrors.length) && (

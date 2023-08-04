@@ -2,16 +2,10 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
-      "public": [
-        "./public"
-      ]
+      "public": ["./public"]
     },
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -31,16 +25,11 @@
       }
     ]
   },
-  "exclude": [
-    "node_modules"
-  ],
+  "exclude": ["node_modules"],
   "files": [
-    "./declarations.d.ts"
+    "./declarations.d.ts",
+    "./src/app/chores/AddChoreButton.tsx",
+    "./src/app/chores/ChoreDetails.tsx"
   ],
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"]
 }

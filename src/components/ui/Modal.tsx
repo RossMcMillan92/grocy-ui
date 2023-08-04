@@ -1,7 +1,7 @@
 "use client"
 
+import { H2 } from "./Heading"
 import { XOutline } from "heroicons-react"
-import Heading from "./Heading"
 import React from "react"
 import ReactModal from "react-modal"
 import classNames from "helpers/classNames"
@@ -84,9 +84,7 @@ const Modal: React.FC<ModalProps> = ({
             )}
           >
             <div className="flex justify-between px-4 pt-4 bg-gray-100 sm:px-6 sm:pt-6">
-              <Heading.H2 className={classNames("text-gray-700 mb-4")}>
-                {title}
-              </Heading.H2>
+              <H2 className={classNames("text-gray-700 mb-4")}>{title}</H2>
 
               <button
                 className="flex items-center justify-center w-12 h-12 -mt-2 -mr-3"
