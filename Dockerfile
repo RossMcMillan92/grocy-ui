@@ -11,10 +11,8 @@ RUN apk add --no-cache jq yarn
 
 
 COPY . .
-RUN yarn --frozen-lockfile
+RUN yarn --frozen-lockfile --network-timeout 1000000
 RUN yarn build
-RUN rm -rf src node_modules
-RUN yarn --frozen-lockfile --production
 
 # Copy data for add-on
 RUN chmod a+x /run.sh
