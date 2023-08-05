@@ -9,9 +9,8 @@ RUN apk add npm --repository="http://dl-cdn.alpinelinux.org/alpine/v3.18/main/"
 RUN node --version
 RUN apk add --no-cache jq yarn 
 
-
 COPY . .
-RUN yarn --frozen-lockfile --network-timeout 1000000
+RUN yarn install --network-timeout 1000000 --frozen-lockfile
 RUN yarn build
 
 # Copy data for add-on
