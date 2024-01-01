@@ -5,11 +5,14 @@ import Button from "components/ui/Button"
 import DynamicForm from "components/ui/DynamicForm"
 import Modal from "components/ui/Modal"
 import React from "react"
+import classNames from "helpers/classNames"
 
 const RemoveChoreModal: React.FC<{
   chore: DetailedChore
-  onClose: () => void
-}> = ({ chore, onClose }) => {
+}> = ({ chore }) => {
+  const [status, setStatus] = React.useState<
+    "pending" | "editing-chore" | "removing-chore" | "tracking-chore"
+  >("pending")
   const [formStatus, setFormStatus] = React.useState<
     "pending" | "submitting" | "successful"
   >("pending")
@@ -22,34 +25,48 @@ const RemoveChoreModal: React.FC<{
 
   React.useEffect(() => {
     if (formStatus === "successful") {
-      const timeout = setTimeout(onClose, 1500)
+      const timeout = setTimeout(() => setStatus("pending"), 1500)
       return () => clearTimeout(timeout)
     }
   }, [formStatus])
 
   return (
-    <Modal title="Remove chore" onRequestClose={onClose}>
-      <DynamicForm
-        action={`/api/objects/chores/${chore.chore.id}`}
-        method="DELETE"
-        onSuccess={onSuccess}
-        className="p-4 sm:p-6"
-      >
-        {() => (
-          <>
-            <Button.Warning type="submit" className="block w-full mb-4">
-              Remove
-            </Button.Warning>
-            <Button.Secondary
-              className="block w-full"
-              onClick={() => onClose()}
-            >
-              Cancel
-            </Button.Secondary>
-          </>
+    <>
+      <button
+        className={classNames(
+          "flex items-center justify-center",
+          "px-4 py-2 mt-4 rounded",
+          "bg-gray-100 text-gray-700",
         )}
-      </DynamicForm>
-    </Modal>
+        onClick={() => setStatus("removing-chore")}
+      >
+        Remove
+      </button>
+      {status === "removing-chore" ? (
+        <Modal title="Remove chore" onRequestClose={() => setStatus("pending")}>
+          <DynamicForm
+            action={`/api/objects/chores/${chore.chore.id}`}
+            method="DELETE"
+            onSuccess={onSuccess}
+            className="p-4 sm:p-6"
+          >
+            {() => (
+              <>
+                <Button.Warning type="submit" className="block w-full mb-4">
+                  Remove
+                </Button.Warning>
+                <Button.Secondary
+                  className="block w-full"
+                  onClick={() => setStatus("pending")}
+                >
+                  Cancel
+                </Button.Secondary>
+              </>
+            )}
+          </DynamicForm>
+        </Modal>
+      ) : null}
+    </>
   )
 }
 

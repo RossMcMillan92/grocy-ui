@@ -1,7 +1,5 @@
-"use client"
-
-import { CheckOutline, PencilAltOutline } from "heroicons-react"
 import { Chore, DetailedChore } from "types/grocy"
+import { PencilAltOutline } from "heroicons-react"
 import {
   getHoursUntil,
   inShortTextualDateFormat,
@@ -9,6 +7,7 @@ import {
   isDueWithin,
 } from "helpers/date-utils"
 import AddChoreModal from "components/AddChoreModal"
+import Link from "next/link"
 import MultiParagraphs from "components/ui/MultiParagraphs"
 import React, { ReactNode } from "react"
 import RemoveChoreModal from "components/RemoveChoreModal"
@@ -22,11 +21,9 @@ export const ChoreDetails: React.FC<{
   chore: DetailedChore
   chores: Chore[]
   dueSoonDays: number
-}> = ({ children, chore, chores, dueSoonDays }) => {
-  const [status, setStatus] = React.useState<
-    "pending" | "editing-chore" | "removing-chore" | "tracking-chore"
-  >("pending")
-  const [isOpen, setIsOpen] = React.useState<boolean>(false)
+  open: number[]
+}> = ({ children, chore, chores, dueSoonDays, open }) => {
+  const isOpen = open.includes(Number(chore.chore.id))
   const nextAssignedUser =
     chore?.next_execution_assigned_user?.display_name ?? "Anyone"
   const lastAssignedUser = chore?.last_done_by?.display_name ?? "Unknown"
@@ -41,13 +38,17 @@ export const ChoreDetails: React.FC<{
       <div
         className={classNames("flex items-center z-10 relative", "py-4 w-full")}
       >
-        <button
+        <Link
           className={classNames(
             "flex items-center",
             "w-full",
             "overflow-hidden",
           )}
-          onClick={() => setIsOpen((b) => !b)}
+          href={`/chores?open=[${
+            open.includes(Number(chore.chore.id))
+              ? open.filter((id) => id !== Number(chore.chore.id))
+              : [...open, chore.chore.id]
+          }]`}
         >
           <div
             className={classNames(
@@ -122,17 +123,9 @@ export const ChoreDetails: React.FC<{
               />
             </svg>
           </div>
-        </button>
+        </Link>
         <div className={classNames("flex-shrink-0 ml-4")}>
-          <button
-            className={classNames(
-              "flex items-center justify-center",
-              "h-12 w-12 bg-gray-100 text-gray-400 rounded-full",
-            )}
-            onClick={() => setStatus("tracking-chore")}
-          >
-            <CheckOutline className={classNames("h-7 w-7")} />
-          </button>
+          <TrackChoreModal chore={chore} />
         </div>
       </div>
       <div
@@ -197,46 +190,11 @@ export const ChoreDetails: React.FC<{
         />
 
         <div className={classNames("flex")}>
-          <button
-            className={classNames(
-              "flex items-center justify-center",
-              "px-4 py-2 mt-4 rounded",
-              "bg-gray-100 text-gray-700",
-              "mr-2",
-            )}
-            onClick={() => setStatus("editing-chore")}
-          >
-            Edit
-          </button>
+          <AddChoreModal chore={chore} chores={chores} />
 
-          <button
-            className={classNames(
-              "flex items-center justify-center",
-              "px-4 py-2 mt-4 rounded",
-              "bg-gray-100 text-gray-700",
-            )}
-            onClick={() => setStatus("removing-chore")}
-          >
-            Remove
-          </button>
+          <RemoveChoreModal chore={chore} />
         </div>
       </div>
-
-      {status === "tracking-chore" && chore ? (
-        <TrackChoreModal onClose={() => setStatus("pending")} chore={chore} />
-      ) : null}
-
-      {status === "editing-chore" ? (
-        <AddChoreModal
-          chore={chore}
-          chores={chores}
-          onClose={() => setStatus("pending")}
-        />
-      ) : null}
-
-      {status === "removing-chore" ? (
-        <RemoveChoreModal chore={chore} onClose={() => setStatus("pending")} />
-      ) : null}
     </div>
   )
 }

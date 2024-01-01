@@ -2,15 +2,24 @@ import { AddChoreButton } from "./AddChoreButton"
 import { Chore, DetailedChore, Settings } from "types/grocy"
 import { ChoreDetails } from "./ChoreDetails"
 import { H1 } from "components/ui/Heading"
+import { Suspense } from "react"
 import { getChore, getChores } from "api/chores"
 import { getSettings } from "api/settings"
 import { getUsers } from "api/users"
+import { headers } from "next/headers"
 import { sortBy } from "ramda"
 import { withErrorHandling } from "api/error-handling"
-import React, { Suspense } from "react"
 import classNames from "helpers/classNames"
 
-const ChoresRoute = async () => {
+const ChoresRoute = async ({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined }
+}) => {
+  console.log(
+    "😅😅😅 ~ X-Forwarded-For:",
+    JSON.stringify(headers().get("X-Forwarded-For"), null, 2),
+  )
   const [{ data: settings, error: settingsError }, { data: users }, chores] =
     await Promise.all([
       withErrorHandling<Settings>(getSettings()),
@@ -47,26 +56,29 @@ const ChoresRoute = async () => {
             "rounded py-2 px-4 mb-8",
           )}
         >
-          <div className="text-2xl mb-x">
+          <div
+            className={classNames(
+              "text-2xl",
+              choresDoneToday.length > 0 ? "mb-2" : "",
+            )}
+          >
             {choresDoneToday.length} done today
             {choresDoneToday.length > 0 ? `! 🎉` : " 😔"}
           </div>
-          {/* <div className="opacity-90">
-            {users.map((user) => {
-              const amount = choresDoneToday.filter(
-                (chore) => chore.last_done_by?.id === user.id,
-              ).length
-              return (
-                <div key={user.id}>
-                  {amount} by {user.display_name} {amount > 0 ? "😄" : "😔"}
-                </div>
-              )
-            })}
-          </div> */}
+          {choresDoneToday.length > 0 ? (
+            <details className="text-lime-600">
+              <summary>More info</summary>
+              <ul>
+                {choresDoneToday.map((chore) => (
+                  <li key={chore.chore_id}>✅ {chore.chore_name}</li>
+                ))}
+              </ul>
+            </details>
+          ) : null}
         </div>
       </div>
 
-      <ul className={classNames("divide-y divide-gray-300")}>
+      <ul className={classNames("divide-y divide-slate-300")}>
         {sortedChores.map((chore) => (
           <li key={chore.chore_id}>
             <Suspense fallback={<p className="py-4">Loading chore...</p>}>
@@ -74,6 +86,7 @@ const ChoresRoute = async () => {
                 choreId={chore.chore_id}
                 chores={sortedChores}
                 dueSoonDays={dueSoonDays}
+                openString={(searchParams.open as string) ?? "[]"}
               />
             </Suspense>
           </li>
@@ -87,10 +100,12 @@ const Thing = async ({
   choreId,
   chores,
   dueSoonDays,
+  openString,
 }: {
   choreId: Chore["chore_id"]
   chores: Chore[]
   dueSoonDays: number
+  openString: string
 }) => {
   const detailedChore = await getChore(choreId).then(
     (data) => data as DetailedChore,
@@ -100,6 +115,7 @@ const Thing = async ({
       chore={detailedChore}
       chores={chores}
       dueSoonDays={dueSoonDays}
+      open={JSON.parse(openString)}
     ></ChoreDetails>
   )
 }

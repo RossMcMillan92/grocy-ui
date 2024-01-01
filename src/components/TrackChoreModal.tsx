@@ -1,5 +1,5 @@
 "use client"
-import { CheckCircleOutline } from "heroicons-react"
+import { CheckCircleOutline, CheckOutline } from "heroicons-react"
 import { DetailedChore } from "types/grocy"
 import { inDateFormat, inTimeFormat } from "helpers/date-utils"
 import { useRouter } from "next/navigation"
@@ -18,8 +18,10 @@ import dayjs from "dayjs"
 
 const TrackChoreModal: React.FC<{
   chore: DetailedChore
-  onClose: () => void
-}> = ({ chore, onClose }) => {
+}> = ({ chore }) => {
+  const [status, setStatus] = React.useState<
+    "pending" | "editing-chore" | "removing-chore" | "tracking-chore"
+  >("pending")
   const [formStatus, setFormStatus] = React.useState<
     "pending" | "submitting" | "successful"
   >("pending")
@@ -41,7 +43,7 @@ const TrackChoreModal: React.FC<{
 
   React.useEffect(() => {
     if (formStatus === "successful") {
-      const timeout = setTimeout(onClose, 1500)
+      const timeout = setTimeout(() => setStatus("pending"), 1500)
       return () => clearTimeout(timeout)
     }
   }, [formStatus])
@@ -52,100 +54,121 @@ const TrackChoreModal: React.FC<{
   )
 
   return (
-    <Modal title="Track chore" onRequestClose={onClose}>
-      <DynamicForm
-        action={`/api/chores/${chore.chore.id}/execute`}
-        method="POST"
-        onSuccess={onSuccess}
-        className="p-4 sm:p-6"
-      >
-        {() => (
-          <>
-            <div className="mb-8">
-              <div className="flex items-center mb-6">
-                <CheckCircleOutline className="w-8 h-8 mr-2 text-green-500" />
-                <Paragraph className={classNames("text-xl font-medium")}>
-                  {chore.chore.name}
-                </Paragraph>
-              </div>
-
-              <SelectField
-                label="Completed by"
-                id="user"
-                name="done_by"
-                defaultValue={defaultUser}
-                onChange={(event) => setDefaultUser(event.target.value)}
-              >
-                <option value="0">Not assigned</option>
-
-                {users.map((user) => (
-                  <option key={user.id} value={user.id}>
-                    {user.display_name}
-                  </option>
-                ))}
-              </SelectField>
-
-              <RadiosField
-                id="time"
-                name="time"
-                title="When?"
-                radios={[
-                  {
-                    label: "Now",
-                    value: "now",
-                    checked: selectedTime === "now",
-                    onChange: () => setSelectedTime("now"),
-                  },
-                  {
-                    label: "Enter manually...",
-                    value: "specific",
-                    checked: selectedTime === "specific",
-                    onChange: () => setSelectedTime("specific"),
-                  },
-                ]}
-              />
-
-              <input type="hidden" name="tracked_time" value={dateTracked} />
-
-              <div
-                className={classNames(
-                  "xs:flex items-center",
-                  "transform ease-out",
-                  selectedTime === "specific"
-                    ? "opacity-100 transition duration-200 delay-75"
-                    : "absolute opacity-0 pointer-events-none -translate-y-3",
-                )}
-              >
-                <DateField
-                  label="Date"
-                  name="date"
-                  id="date"
-                  className={classNames("mr-4")}
-                  value={dateInput}
-                  onChange={(event) => setDateInput(event.target.value)}
-                />
-                {chore.chore.track_date_only === "1" ? null : (
-                  <TimeField
-                    label="Time"
-                    name="time"
-                    id="time"
-                    value={timeInput}
-                    onChange={(event) => setTimeInput(event.target.value)}
-                  />
-                )}
-              </div>
-            </div>
-
-            <Button.Positive type="submit" className="block w-full mb-4">
-              Continue
-            </Button.Positive>
-            <Button.Secondary className="block w-full" onClick={onClose}>
-              Cancel
-            </Button.Secondary>
-          </>
+    <>
+      <button
+        className={classNames(
+          "flex items-center justify-center",
+          "h-12 w-12 bg-gray-100 text-gray-400 rounded-full",
         )}
-      </DynamicForm>
-    </Modal>
+        onClick={() => setStatus("tracking-chore")}
+      >
+        <CheckOutline className={classNames("h-7 w-7")} />
+      </button>
+
+      {status === "tracking-chore" && chore ? (
+        <Modal title="Track chore" onRequestClose={() => setStatus("pending")}>
+          <DynamicForm
+            action={`/api/chores/${chore.chore.id}/execute`}
+            method="POST"
+            onSuccess={onSuccess}
+            className="p-4 sm:p-6"
+          >
+            {() => (
+              <>
+                <div className="mb-8">
+                  <div className="flex items-center mb-6">
+                    <CheckCircleOutline className="w-8 h-8 mr-2 text-green-500" />
+                    <Paragraph className={classNames("text-xl font-medium")}>
+                      {chore.chore.name}
+                    </Paragraph>
+                  </div>
+
+                  <SelectField
+                    label="Completed by"
+                    id="user"
+                    name="done_by"
+                    defaultValue={defaultUser}
+                    onChange={(event) => setDefaultUser(event.target.value)}
+                  >
+                    <option value="0">Not assigned</option>
+
+                    {users.map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.display_name}
+                      </option>
+                    ))}
+                  </SelectField>
+
+                  <RadiosField
+                    id="time"
+                    name="time"
+                    title="When?"
+                    radios={[
+                      {
+                        label: "Now",
+                        value: "now",
+                        checked: selectedTime === "now",
+                        onChange: () => setSelectedTime("now"),
+                      },
+                      {
+                        label: "Enter manually...",
+                        value: "specific",
+                        checked: selectedTime === "specific",
+                        onChange: () => setSelectedTime("specific"),
+                      },
+                    ]}
+                  />
+
+                  <input
+                    type="hidden"
+                    name="tracked_time"
+                    value={dateTracked}
+                  />
+
+                  <div
+                    className={classNames(
+                      "xs:flex items-center",
+                      "transform ease-out",
+                      selectedTime === "specific"
+                        ? "opacity-100 transition duration-200 delay-75"
+                        : "absolute opacity-0 pointer-events-none -translate-y-3",
+                    )}
+                  >
+                    <DateField
+                      label="Date"
+                      name="date"
+                      id="date"
+                      className={classNames("mr-4")}
+                      value={dateInput}
+                      onChange={(event) => setDateInput(event.target.value)}
+                    />
+                    {chore.chore.track_date_only === "1" ? null : (
+                      <TimeField
+                        label="Time"
+                        name="time"
+                        id="time"
+                        value={timeInput}
+                        onChange={(event) => setTimeInput(event.target.value)}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <Button.Positive type="submit" className="block w-full mb-4">
+                  Continue
+                </Button.Positive>
+                <Button.Secondary
+                  className="block w-full"
+                  onClick={() => setStatus("pending")}
+                >
+                  Cancel
+                </Button.Secondary>
+              </>
+            )}
+          </DynamicForm>
+        </Modal>
+      ) : null}
+    </>
   )
 }
 
@@ -156,7 +179,8 @@ const useLocalStorage = <T extends string | number | boolean>(
   defaultValue: T,
 ) => {
   const [value, setValue] = React.useState<T>(() => {
-    const storedValue = localStorage.getItem(key)
+    const storedValue =
+      typeof window !== "undefined" ? window.localStorage.getItem(key) : ""
     return storedValue ? (storedValue as T) : defaultValue
   })
 

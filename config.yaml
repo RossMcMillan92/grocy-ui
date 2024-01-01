@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/add-ons/configuration#add-on-config
 name: Grocy UI
-version: "1.9.0"
+version: "1.10.0"
 init: false
 slug: grocy_ui
 description: A streamlined UI for Grocy
@@ -13,7 +13,6 @@ arch:
   - i386
 map:
   - share:rw
-ports:
-  3820/tcp: 3820
+ingress: true
 startup: services
 boot: auto
