@@ -23,10 +23,7 @@ export function AddChoreButton({ sortedChores }: { sortedChores: Chore[] }) {
         Add <PlusOutline className={classNames("text-gray-600 h-5 w-5 ml-2")} />
       </button>
       {status === "adding-chore" ? (
-        <AddChoreModal
-          chores={sortedChores}
-          onClose={() => setStatus("pending")}
-        />
+        <AddChoreModal chores={sortedChores} />
       ) : null}
     </>
   )
