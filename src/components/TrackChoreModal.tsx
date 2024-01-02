@@ -1,6 +1,6 @@
 "use client"
 import { CheckCircleOutline, CheckOutline } from "heroicons-react"
-import { DetailedChore } from "types/grocy"
+import { Chore } from "types/grocy"
 import { inDateFormat, inTimeFormat } from "helpers/date-utils"
 import { useRouter } from "next/navigation"
 import { useUsers } from "contexts/users"
@@ -17,7 +17,7 @@ import classNames from "helpers/classNames"
 import dayjs from "dayjs"
 
 const TrackChoreModal: React.FC<{
-  chore: DetailedChore
+  chore: Chore
 }> = ({ chore }) => {
   const [status, setStatus] = React.useState<
     "pending" | "editing-chore" | "removing-chore" | "tracking-chore"
@@ -50,7 +50,7 @@ const TrackChoreModal: React.FC<{
 
   const [defaultUser, setDefaultUser] = useLocalStorage(
     "defaultUser",
-    chore.next_execution_assigned_user?.id ?? "0",
+    chore.next_execution_assigned_to_user_id ?? "0",
   )
 
   return (
@@ -68,7 +68,7 @@ const TrackChoreModal: React.FC<{
       {status === "tracking-chore" && chore ? (
         <Modal title="Track chore" onRequestClose={() => setStatus("pending")}>
           <DynamicForm
-            action={`/api/chores/${chore.chore.id}/execute`}
+            action={`/api/chores/${chore.chore_id}/execute`}
             method="POST"
             onSuccess={onSuccess}
             className="p-4 sm:p-6"
@@ -79,7 +79,7 @@ const TrackChoreModal: React.FC<{
                   <div className="flex items-center mb-6">
                     <CheckCircleOutline className="w-8 h-8 mr-2 text-green-500" />
                     <Paragraph className={classNames("text-xl font-medium")}>
-                      {chore.chore.name}
+                      {chore.chore_name}
                     </Paragraph>
                   </div>
 
@@ -142,7 +142,7 @@ const TrackChoreModal: React.FC<{
                       value={dateInput}
                       onChange={(event) => setDateInput(event.target.value)}
                     />
-                    {chore.chore.track_date_only === "1" ? null : (
+                    {chore.track_date_only === "1" ? null : (
                       <TimeField
                         label="Time"
                         name="time"

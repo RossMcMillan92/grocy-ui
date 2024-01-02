@@ -1,25 +1,16 @@
 import { AddChoreButton } from "./AddChoreButton"
+import { BasicChoreDetails, ChoreDetails } from "./ChoreDetails"
 import { Chore, DetailedChore, Settings } from "types/grocy"
-import { ChoreDetails } from "./ChoreDetails"
 import { H1 } from "components/ui/Heading"
 import { Suspense } from "react"
 import { getChore, getChores } from "api/chores"
 import { getSettings } from "api/settings"
 import { getUsers } from "api/users"
-import { headers } from "next/headers"
 import { sortBy } from "ramda"
 import { withErrorHandling } from "api/error-handling"
 import classNames from "helpers/classNames"
 
-const ChoresRoute = async ({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined }
-}) => {
-  console.log(
-    "😅😅😅 ~ X-Forwarded-For:",
-    JSON.stringify(headers().get("X-Forwarded-For"), null, 2),
-  )
+const ChoresRoute = async () => {
   const [{ data: settings, error: settingsError }, { data: users }, chores] =
     await Promise.all([
       withErrorHandling<Settings>(getSettings()),
@@ -81,12 +72,19 @@ const ChoresRoute = async ({
       <ul className={classNames("divide-y divide-slate-300")}>
         {sortedChores.map((chore) => (
           <li key={chore.chore_id}>
-            <Suspense fallback={<p className="py-4">Loading chore...</p>}>
-              <Thing
+            <Suspense
+              fallback={
+                <BasicChoreDetails
+                  chore={chore}
+                  dueSoonDays={dueSoonDays}
+                  users={users}
+                />
+              }
+            >
+              <DetailedChore
                 choreId={chore.chore_id}
                 chores={sortedChores}
                 dueSoonDays={dueSoonDays}
-                openString={(searchParams.open as string) ?? "[]"}
               />
             </Suspense>
           </li>
@@ -96,27 +94,25 @@ const ChoresRoute = async ({
   )
 }
 
-const Thing = async ({
+const DetailedChore = async ({
   choreId,
   chores,
   dueSoonDays,
-  openString,
 }: {
   choreId: Chore["chore_id"]
   chores: Chore[]
   dueSoonDays: number
-  openString: string
 }) => {
   const detailedChore = await getChore(choreId).then(
     (data) => data as DetailedChore,
   )
   return (
     <ChoreDetails
-      chore={detailedChore}
+      chore={chores.find((chore) => chore.chore_id === choreId) as Chore}
+      detailedChore={detailedChore}
       chores={chores}
       dueSoonDays={dueSoonDays}
-      open={JSON.parse(openString)}
-    ></ChoreDetails>
+    />
   )
 }
 
