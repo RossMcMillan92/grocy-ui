@@ -38,7 +38,10 @@ export const ChoreDetails: React.FC<{
       )}
     >
       <div
-        className={classNames("flex items-center z-10 relative", "py-4 w-full")}
+        className={classNames(
+          "flex items-center z-10 relative",
+          "pt-4 pb-2 w-full",
+        )}
       >
         <button
           className={classNames(
@@ -92,7 +95,6 @@ export const ChoreDetails: React.FC<{
                 "transform transition-all duration-150",
               )}
             >
-              {children}
               <span>{nextAssignedUser}</span>{" "}
               {detailedChore.next_estimated_execution_time ? (
                 <span
@@ -128,6 +130,7 @@ export const ChoreDetails: React.FC<{
           <TrackChoreModal chore={chore} />
         </div>
       </div>
+      {children}
       <div
         className={classNames(
           isOpen && "opacity-100 delay-150 ease-in",
@@ -215,7 +218,10 @@ export const BasicChoreDetails: React.FC<{
       )}
     >
       <div
-        className={classNames("flex items-center z-10 relative", "py-4 w-full")}
+        className={classNames(
+          "flex items-center z-10 relative",
+          "pt-4 pb-2 w-full",
+        )}
       >
         <button
           className={classNames(

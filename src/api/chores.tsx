@@ -58,6 +58,14 @@ export const getChore = (choreId: Chore["chore_id"]): Promise<DetailedChore> =>
     (d) => d.json(),
   )
 
+export const getChoreHistory = (choreId: Chore["chore_id"]) =>
+  fetch(
+    `http://${GROCY_HOST}/choresjournal?embedded&chore=${choreId}&months=9999`,
+    {
+      ...getFetchOptions(),
+    },
+  ).then((d) => d.text())
+
 export const executeChore = (
   choreId: Chore["chore_id"],
   formData: string,
