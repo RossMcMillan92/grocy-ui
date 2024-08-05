@@ -14,7 +14,7 @@
     "focus-visible": "^5.2.0",
     "heroicons-react": "1.4.1",
     "jsdom": "^24.1.1",
-    "next": "14.2.5",
+    "next": "13.x.x",
     "postcss": "^8.4.27",
     "ramda": "^0.29.0",
     "react": "^18.3.1",
