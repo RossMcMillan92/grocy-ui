@@ -4,9 +4,8 @@ FROM $BUILD_FROM
 ENV LANG C.UTF-8
 
 RUN echo "${ALPINE_MIRROR}/v3.18/main/" >> /etc/apk/repositories
-RUN apk add nodejs --repository="http://dl-cdn.alpinelinux.org/alpine/v3.18/main/"
-RUN apk add npm --repository="http://dl-cdn.alpinelinux.org/alpine/v3.18/main/"
-RUN node --version
+RUN apk add --no-cache libc6-compat gcc g++ make python3
+RUN apk add nodejs npm --repository="http://dl-cdn.alpinelinux.org/alpine/v3.18/main/"
 RUN apk add --no-cache jq yarn 
 
 COPY . .
