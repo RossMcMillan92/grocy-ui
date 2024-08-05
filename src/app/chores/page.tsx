@@ -7,6 +7,7 @@ import { Suspense } from "react"
 import { getChore, getChoreHistory, getChores } from "api/chores"
 import { getSettings } from "api/settings"
 import { getUsers } from "api/users"
+import { setTimeout } from "timers/promises"
 import { sortBy } from "ramda"
 import { withErrorHandling } from "api/error-handling"
 import classNames from "helpers/classNames"
@@ -121,13 +122,14 @@ const DetailedChoreComponent = async ({
           </div>
         }
       >
-        <ChoreHistory choreId={choreId} />
+        {/* <ChoreHistory choreId={choreId} /> */}
       </Suspense>
     </ChoreDetails>
   )
 }
 
 const ChoreHistory = async ({ choreId }: { choreId: Chore["chore_id"] }) => {
+  await setTimeout(600000)
   const choreHistory = await getChoreHistory(choreId).then((data) => {
     const dom = new JSDOM(data)
 
