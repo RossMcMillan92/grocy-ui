@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/add-ons/configuration#add-on-config
 name: Grocy UI
-version: "1.19.0"
+version: "1.20.0"
 init: false
 slug: grocy_ui
 description: A streamlined UI for Grocy

@@ -12,6 +12,7 @@ RUN apk add --no-cache \
     yarn
 
 COPY . .
+COPY /run.sh /run.sh
 
 RUN yarn install --network-timeout 1000000 --frozen-lockfile && yarn build
 
